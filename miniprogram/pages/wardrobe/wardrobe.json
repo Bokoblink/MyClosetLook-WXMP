@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "floating-button": "/components/floating-button/floating-button"
+  },
+  "navigationBarTitleText": "我的衣橱"
+}
