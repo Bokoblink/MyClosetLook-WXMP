@@ -4,6 +4,7 @@ Page({
     activeCategory: '上衣',
     showFilterModal: false, // 控制筛选弹窗显示
     currentFilterType: '', // 当前正在操作的筛选类型
+    availableFilters: ['season', 'sleeveType', 'collarType'], // 当前可用的筛选类型
     filterOptions: {
       season: ['夏', '春秋', '冬'],
       sleeveType: ['弓袋袖', '飞机袖', '半袖', '比甲', '吊带'],
@@ -20,6 +21,20 @@ Page({
     },
     clothesList: []
   },
+  getFilterOptions() {
+    const { activeCategory } = this.data
+    let options = []
+    
+    if (activeCategory === '上衣') {
+      options = ['season', 'sleeveType', 'collarType']
+    } else if (activeCategory === '下裙') {
+      options = ['season', 'skirtType'] 
+    } else {
+      options = ['season', 'accessoryType']
+    }
+    
+    this.setData({ availableFilters: options })
+  },
   changeCategory(e) {
     const category = e.currentTarget.dataset.category
     this.setData({
@@ -34,6 +49,7 @@ Page({
       }
     }, () => {
       this.loadClothes() // 重新加载数据
+      this.getFilterOptions() // 切换分类时更新可用筛选
     })
   },
   stopPropagation() {

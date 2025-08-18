@@ -1,4 +1,5 @@
-<!-- 顶部分类导航 -->
+<!-- pages/wardrobe/wardrobe.wxml -->
+<!-- 顶部分类导航（保持不变） -->
 <view class="category-tabs">
   <block wx:for="{{['上衣', '下裙', '配饰']}}" wx:key="*this">
     <view 
@@ -13,7 +14,7 @@
 
 <!-- 筛选条件栏 -->
 <scroll-view scroll-x class="filter-bar">
-  <!-- 季节筛选 -->
+  <!-- 季节筛选（保持不变） -->
   <view 
     class="filter-item {{selectedFilters.season.length ? 'active' : ''}}"
     data-type="season"
@@ -25,6 +26,7 @@
 
   <!-- 动态筛选条件 -->
   <block wx:if="{{activeCategory === '上衣'}}">
+    <!-- 上衣分类的筛选条件（保持不变） -->
     <view 
       class="filter-item {{selectedFilters.sleeveType.length ? 'active' : ''}}"
       data-type="sleeveType"
@@ -42,6 +44,28 @@
       <text wx:if="{{selectedFilters.collarType.length}}">({{selectedFilters.collarType.length}})</text>
     </view>
   </block>
-  
-  <!-- 下裙和配饰的筛选条件... -->
+
+  <!-- 新增：下裙分类的筛选条件 -->
+  <block wx:if="{{activeCategory === '下裙'}}">
+    <view 
+      class="filter-item {{selectedFilters.skirtType.length ? 'active' : ''}}"
+      data-type="skirtType"
+      bindtap="showFilter"
+    >
+      <text>类型</text>
+      <text wx:if="{{selectedFilters.skirtType.length}}">({{selectedFilters.skirtType.length}})</text>
+    </view>
+  </block>
+
+  <!-- 新增：配饰分类的筛选条件 -->
+  <block wx:if="{{activeCategory === '配饰'}}">
+    <view 
+      class="filter-item {{selectedFilters.accessoryType.length ? 'active' : ''}}"
+      data-type="accessoryType"
+      bindtap="showFilter"
+    >
+      <text>类型</text>
+      <text wx:if="{{selectedFilters.accessoryType.length}}">({{selectedFilters.accessoryType.length}})</text>
+    </view>
+  </block>
 </scroll-view>
