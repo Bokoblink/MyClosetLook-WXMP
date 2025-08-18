@@ -20,6 +20,22 @@ Page({
     },
     clothesList: []
   },
+  changeCategory(e) {
+    const category = e.currentTarget.dataset.category
+    this.setData({
+      activeCategory: category,
+      // 重置筛选条件
+      selectedFilters: {
+        season: [],
+        sleeveType: [],
+        collarType: [],
+        skirtType: [],
+        accessoryType: []
+      }
+    }, () => {
+      this.loadClothes() // 重新加载数据
+    })
+  },
   stopPropagation() {
     // 这个空方法只是为了阻止事件冒泡
     // 不需要写任何内容
