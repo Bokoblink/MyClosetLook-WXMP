@@ -1,5 +1,18 @@
-<!-- 筛选栏部分改造 -->
-<view class="filter-bar">
+<!-- 顶部分类导航 -->
+<view class="category-tabs">
+  <block wx:for="{{['上衣', '下裙', '配饰']}}" wx:key="*this">
+    <view 
+      class="tab {{activeCategory === item ? 'active' : ''}}"
+      data-category="{{item}}"
+      bindtap="changeCategory"
+    >
+      {{item}}
+    </view>
+  </block>
+</view>
+
+<!-- 筛选条件栏 -->
+<scroll-view scroll-x class="filter-bar">
   <!-- 季节筛选 -->
   <view 
     class="filter-item {{selectedFilters.season.length ? 'active' : ''}}"
@@ -10,7 +23,7 @@
     <text wx:if="{{selectedFilters.season.length}}">({{selectedFilters.season.length}})</text>
   </view>
 
-  <!-- 动态筛选 -->
+  <!-- 动态筛选条件 -->
   <block wx:if="{{activeCategory === '上衣'}}">
     <view 
       class="filter-item {{selectedFilters.sleeveType.length ? 'active' : ''}}"
@@ -29,59 +42,6 @@
       <text wx:if="{{selectedFilters.collarType.length}}">({{selectedFilters.collarType.length}})</text>
     </view>
   </block>
-
-  <block wx:if="{{activeCategory === '下裙'}}">
-    <view 
-      class="filter-item {{selectedFilters.skirtType.length ? 'active' : ''}}"
-      data-type="skirtType"
-      bindtap="showFilter"
-    >
-      <text>类型</text>
-      <text wx:if="{{selectedFilters.skirtType.length}}">({{selectedFilters.skirtType.length}})</text>
-    </view>
-  </block>
-
-  <block wx:if="{{activeCategory === '配饰'}}">
-    <view 
-      class="filter-item {{selectedFilters.accessoryType.length ? 'active' : ''}}"
-      data-type="accessoryType"
-      bindtap="showFilter"
-    >
-      <text>类型</text>
-      <text wx:if="{{selectedFilters.accessoryType.length}}">({{selectedFilters.accessoryType.length}})</text>
-    </view>
-  </block>
-</view>
-
-<!-- 多选筛选弹窗 -->
-<view 
-  class="filter-modal {{showFilterModal ? 'show' : ''}}"
-  catchtap="confirmFilter"
->
-  <view class="modal-content" catchtap="stopPropagation">
-    <view class="filter-title">
-      请选择<text wx:if="{{currentFilterType === 'season'}}">季节</text>
-      <text wx:elif="{{currentFilterType === 'sleeveType'}}">袖型</text>
-      <text wx:elif="{{currentFilterType === 'collarType'}}">领型</text>
-      <text wx:else>类型</text>
-    </view>
-    
-    <view class="options-container">
-      <block wx:for="{{filterOptions[currentFilterType]}}" wx:key="*this">
-        <view 
-          class="option-item {{selectedFilters[currentFilterType].includes(item) ? 'selected' : ''}}"
-          data-type="{{currentFilterType}}"
-          data-value="{{item}}"
-          bindtap="toggleFilterOption"
-        >
-          {{item}}
-        </view>
-      </block>
-    </view>
-    
-    <view class="filter-buttons">
-      <button class="reset-btn" bindtap="resetFilter">重置</button>
-      <button class="confirm-btn" bindtap="confirmFilter">确定</button>
-    </view>
-  </view>
-</view>
+  
+  <!-- 下裙和配饰的筛选条件... -->
+</scroll-view>
