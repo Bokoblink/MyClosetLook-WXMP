@@ -152,5 +152,12 @@ Page({
       accessoryType: '类型'
     }
     return map[type] || ''
+  },
+
+  // 跳转到添加衣物页面
+  goToAddClothes() {
+    wx.navigateTo({
+      url: '/pages/add-clothes/add-clothes',
+    })
   }
 })

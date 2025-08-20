@@ -63,35 +63,84 @@
   color: white;
 }
 
-/* 筛选弹窗样式 */
-.filter-popup {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #fff;
-  border-top: 1px solid #ddd;
-  z-index: 1000;
-  animation: slideUp 0.3s ease; /* ★ 动画效果 */
-  box-shadow: 0 -4rpx 10rpx rgba(0,0,0,0.1);
-  border-radius: 20rpx 20rpx 0 0; /* ★ 顶部圆角 */
-}
-
-.popup-content {
-  padding: 30rpx;
-}
-
-.popup-close {
-  margin-top: 30rpx;
-  color: #409eff;
-  text-align: center;
-  font-size: 28rpx;
-  padding: 20rpx;
-}
 .icon-arrow {
   width: 24rpx;
   height: 24rpx;
   margin-left: 8rpx;
+}
+
+/* 筛选弹窗 */
+.filter-popup-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.filter-popup-content {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  animation: slideUp 0.3s ease;
+}
+
+.popup-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.popup-options-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-bottom: 20px;
+}
+
+.popup-option {
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  text-align: center;
+  flex-basis: calc(33.333% - 14rpx);
+  box-sizing: border-box;
+}
+
+.popup-option.selected {
+  background-color: #07c160;
+  color: #fff;
+  border-color: #07c160;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.popup-buttons button {
+  flex: 1;
+  margin: 0 10rpx;
+}
+
+.popup-buttons .confirm-btn {
+  background-color: #07c160;
+  color: white;
+}
+
+.popup-buttons .reset-btn {
+  background-color: #f0f0f0;
+  color: #333;
 }
 
 /* ★ 弹窗动画 */

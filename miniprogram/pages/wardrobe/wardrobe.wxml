@@ -79,15 +79,23 @@
   <view class="filter-popup-mask" bindtap="closeFilter"></view>
   <view class="filter-popup-content">
     <view class="popup-title">选择{{currentFilterName}}</view>
-    <block wx:for="{{filterOptions}}" wx:key="*this">
-      <view 
-        class="popup-option {{selectedFilters[currentFilterType].includes(item) ? 'selected' : ''}}"
-        data-value="{{item}}"
-        bindtap="toggleFilterOption"
-      >
-        {{item}}
-      </view>
-    </block>
-    <button bindtap="confirmFilter">确定</button>
+    <view class="popup-options-container">
+      <block wx:for="{{filterOptions[currentFilterType]}}" wx:key="*this">
+        <view 
+          class="popup-option {{selectedFilters[currentFilterType].includes(item) ? 'selected' : ''}}"
+          data-value="{{item}}"
+          bindtap="toggleFilterOption"
+        >
+          {{item}}
+        </view>
+      </block>
+    </view>
+    <view class="popup-buttons">
+      <button class="reset-btn" bindtap="resetFilter">重置</button>
+      <button class="confirm-btn" bindtap="confirmFilter">确定</button>
+    </view>
   </view>
 </view>
+
+<!-- 添加衣物悬浮按钮 -->
+<floating-button bind:tap="goToAddClothes"></floating-button>
