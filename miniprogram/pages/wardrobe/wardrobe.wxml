@@ -22,7 +22,7 @@
   >
     <text>季节</text>
     <text wx:if="{{selectedFilters.season.length}}">({{selectedFilters.season.length}})</text>
-    <image class="icon-arrow" src="../../image/icon-arrow-down.png" />
+    <image class="icon-arrow" src="../../images/icon-arrow-down.png" />
   </view>
 
   <!-- 上衣 -->
@@ -34,7 +34,7 @@
     >
       <text>袖型</text>
       <text wx:if="{{selectedFilters.sleeveType.length}}">({{selectedFilters.sleeveType.length}})</text>
-      <image class="icon-arrow" src="../../image/icon-arrow-down.png" />
+      <image class="icon-arrow" src="../../images/icon-arrow-down.png" />
     </view>
     <view 
       class="filter-item {{selectedFilters.collarType.length ? 'active' : ''}}"
@@ -43,7 +43,7 @@
     >
       <text>领型</text>
       <text wx:if="{{selectedFilters.collarType.length}}">({{selectedFilters.collarType.length}})</text>
-      <image class="icon-arrow" src="../../image/icon-arrow-down.png" />
+      <image class="icon-arrow" src="../../images/icon-arrow-down.png" />
     </view>
   </block>
 
@@ -56,7 +56,7 @@
     >
       <text>类型</text>
       <text wx:if="{{selectedFilters.skirtType.length}}">({{selectedFilters.skirtType.length}})</text>
-      <image class="icon-arrow" src="../../image/icon-arrow-down.png" />
+      <image class="icon-arrow" src="../../images/icon-arrow-down.png" />
     </view>
   </block>
 
@@ -69,13 +69,13 @@
     >
       <text>类型</text>
       <text wx:if="{{selectedFilters.accessoryType.length}}">({{selectedFilters.accessoryType.length}})</text>
-      <image class="icon-arrow" src="../../image/icon-arrow-down.png" />
+      <image class="icon-arrow" src="../../images/icon-arrow-down.png" />
     </view>
   </block>
 </scroll-view>
 
 <!-- ✅ 新增：筛选弹窗 -->
-<view wx:if="{{filterVisible}}" class="filter-popup">
+<view wx:if="{{showFilterModal}}" class="filter-popup">
   <view class="filter-popup-mask" bindtap="closeFilter"></view>
   <view class="filter-popup-content">
     <view class="popup-title">选择{{currentFilterName}}</view>
@@ -88,6 +88,6 @@
         {{item}}
       </view>
     </block>
-    <button bindtap="applyFilter">确定</button>
+    <button bindtap="confirmFilter">确定</button>
   </view>
 </view>
