@@ -1,1 +1,46 @@
 /* pages/add-clothes/add-clothes.wxss */
+.container {
+  padding: 20rpx;
+}
+
+.form-item {
+  margin-bottom: 30rpx;
+}
+
+.label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+input, .picker, textarea {
+  border: 1px solid #ddd;
+  padding: 15rpx;
+  border-radius: 8rpx;
+}
+
+.upload-box {
+  width: 200rpx;
+  height: 200rpx;
+  border: 1px dashed #aaa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8rpx;
+}
+
+.upload-placeholder {
+  color: #888;
+}
+
+.preview {
+  width: 100%;
+  height: 100%;
+  border-radius: 8rpx;
+}
+
+.save-btn {
+  background: #007aff;
+  color: white;
+  border-radius: 8rpx;
+}
