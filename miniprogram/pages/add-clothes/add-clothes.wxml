@@ -4,7 +4,7 @@
   <view class="form-item">
     <text class="label">图片 *</text>
     <view class="upload-box" bindtap="chooseImage">
-      <image wx:if="{{image}}" src="{{image}}" class="preview"></image>
+      <image wx:if="{{image}}" src="{{image}}" mode="aspectFit" class="preview"></image>
       <view wx:else class="upload-placeholder">+ 上传图片</view>
     </view>
   </view>
@@ -12,7 +12,7 @@
   <!-- 衣物名称 -->
   <view class="form-item">
     <text class="label">衣物名称 *</text>
-    <input placeholder="请输入名称" value="{{name}}" bindinput="onInputName"/>
+    <input placeholder="请输入名称" value="{{name}}" data-key="name" bindinput="onInput"/>
   </view>
 
   <!-- 分类 -->
@@ -32,54 +32,59 @@
   </view>
 
   <!-- 上衣专属 -->
-  <view wx:if="{{category == '上衣'}}">
+  <block wx:if="{{category == '上衣'}}">
     <view class="form-item">
       <text class="label">袖型</text>
       <picker mode="selector" range="{{sleeveTypes}}" bindchange="onSleeveChange">
-        <view class="picker">{{sleeve || '请选择袖型'}}</view>
+        <view class="picker">{{sleeveType || '请选择袖型'}}</view>
       </picker>
     </view>
     <view class="form-item">
       <text class="label">领型</text>
       <picker mode="selector" range="{{collarTypes}}" bindchange="onCollarChange">
-        <view class="picker">{{collar || '请选择领型'}}</view>
+        <view class="picker">{{collarType || '请选择领型'}}</view>
       </picker>
     </view>
     
-    <view class="form-item"><text class="label">衣长</text><input class="input" bindinput="onSizeInput" data-key="衣长" /></view>
-    <view class="form-item"><text class="label">领围</text><input class="input" bindinput="onSizeInput" data-key="领围" /></view>
-    <view class="form-item"><text class="label">胸围</text><input class="input" bindinput="onSizeInput" data-key="胸围" /></view>
-    <view class="form-item"><text class="label">通袖</text><input class="input" bindinput="onSizeInput" data-key="通袖" /></view>
-    <view class="form-item"><text class="label">袖口</text><input class="input" bindinput="onSizeInput" data-key="袖口" /></view>
-    <view class="form-item"><text class="label">袖根</text><input class="input" bindinput="onSizeInput" data-key="袖根" /></view>
-
-  </view>
+    <view class="size-section">
+      <text class="sub-label">尺寸</text>
+      <view class="form-item"><text class="label">衣长</text><input class="input" placeholder="例如: 100cm" value="{{sizes['衣长']}}" bindinput="onSizeInput" data-key="衣长" /></view>
+      <view class="form-item"><text class="label">领围</text><input class="input" placeholder="例如: 40cm" value="{{sizes['领围']}}" bindinput="onSizeInput" data-key="领围" /></view>
+      <view class="form-item"><text class="label">胸围</text><input class="input" placeholder="例如: 120cm" value="{{sizes['胸围']}}" bindinput="onSizeInput" data-key="胸围" /></view>
+      <view class="form-item"><text class="label">通袖</text><input class="input" placeholder="例如: 180cm" value="{{sizes['通袖']}}" bindinput="onSizeInput" data-key="通袖" /></view>
+      <view class="form-item"><text class="label">袖口</text><input class="input" placeholder="例如: 30cm" value="{{sizes['袖口']}}" bindinput="onSizeInput" data-key="袖口" /></view>
+      <view class="form-item"><text class="label">袖根</text><input class="input" placeholder="例如: 50cm" value="{{sizes['袖根']}}" bindinput="onSizeInput" data-key="袖根" /></view>
+    </view>
+  </block>
 
   <!-- 下裙专属 -->
-  <view wx:if="{{category == '下裙'}}">
+  <block wx:if="{{category == '下裙'}}">
     <view class="form-item">
       <text class="label">类型</text>
-      <picker mode="selector" range="{{skirtTypes}}" bindchange="onTypeChange">
-        <view class="picker">{{type || '请选择类型'}}</view>
+      <picker mode="selector" range="{{skirtTypes}}" bindchange="onSkirtTypeChange">
+        <view class="picker">{{skirtType || '请选择类型'}}</view>
       </picker>
     </view>
-    <view class="form-item"><text class="label">长度</text><input class="input" bindinput="onSizeInput" data-key="长度" /></view>
-  </view>
+    <view class="size-section">
+        <text class="sub-label">尺寸</text>
+        <view class="form-item"><text class="label">裙长</text><input class="input" placeholder="例如: 100cm" value="{{sizes['裙长']}}" bindinput="onSizeInput" data-key="裙长" /></view>
+    </view>
+  </block>
 
   <!-- 配饰专属 -->
-  <view wx:if="{{category == '配饰'}}">
+  <block wx:if="{{category == '配饰'}}">
     <view class="form-item">
       <text class="label">类型</text>
-      <picker mode="selector" range="{{accessoryTypes}}" bindchange="onTypeChange">
-        <view class="picker">{{type || '请选择类型'}}</view>
+      <picker mode="selector" range="{{accessoryTypes}}" bindchange="onAccessoryTypeChange">
+        <view class="picker">{{accessoryType || '请选择类型'}}</view>
       </picker>
     </view>
-  </view>
+  </block>
 
   <!-- 备注 -->
   <view class="form-item">
     <text class="label">备注</text>
-    <textarea placeholder="可选" value="{{remark}}" bindinput="onInputRemark"></textarea>
+    <textarea placeholder="可选" value="{{remark}}" data-key="remark" bindinput="onInput"></textarea>
   </view>
 
   <!-- 保存按钮 -->

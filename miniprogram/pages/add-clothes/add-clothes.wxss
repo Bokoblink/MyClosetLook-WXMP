@@ -1,6 +1,7 @@
 /* pages/add-clothes/add-clothes.wxss */
 .container {
   padding: 20rpx;
+  padding-bottom: 160rpx; /* 为保存按钮留出空间 */
 }
 
 .form-item {
@@ -11,12 +12,30 @@
   font-weight: bold;
   display: block;
   margin-bottom: 10rpx;
+  font-size: 30rpx;
 }
 
 input, .picker, textarea {
   border: 1px solid #ddd;
-  padding: 15rpx;
   border-radius: 8rpx;
+  font-size: 28rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 为单行输入框和选择器设置固定高度和垂直居中 */
+input,
+.picker {
+  height: 88rpx;
+  padding: 0 15rpx;
+  display: flex;
+  align-items: center;
+}
+
+/* 备注的多行文本框样式 */
+textarea {
+  height: 150rpx;
+  padding: 15rpx;
 }
 
 .upload-box {
@@ -40,7 +59,44 @@ input, .picker, textarea {
 }
 
 .save-btn {
-  background: #007aff;
+  background: #07C160;
   color: white;
   border-radius: 8rpx;
+  position: fixed;
+  bottom: 30rpx;
+  left: 30rpx;
+  right: 30rpx;
+}
+
+.size-section {
+  border: 1px solid #f0f0f0;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  margin-top: 20rpx;
+}
+
+.sub-label {
+  font-size: 30rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+  display: block;
+  border-bottom: 1rpx solid #f0f0f0;
+  padding-bottom: 15rpx;
+}
+
+.size-section .form-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.size-section .label {
+  width: 120rpx; /* 固定标签宽度 */
+  font-weight: normal;
+  margin-bottom: 0;
+  flex-shrink: 0; /* 防止被压缩 */
+}
+
+.size-section .input {
+  flex-grow: 1; /* 输入框占据剩余空间 */
 }

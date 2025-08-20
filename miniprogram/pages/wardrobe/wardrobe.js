@@ -28,6 +28,14 @@ Page({
     clothesList: []
   },
 
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow() {
+    this.getFilterOptions();
+    this.loadClothes();
+  },
+
   // 根据分类更新可用筛选
   getFilterOptions() {
     const { activeCategory } = this.data
