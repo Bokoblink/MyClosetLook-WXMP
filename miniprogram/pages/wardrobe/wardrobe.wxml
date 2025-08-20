@@ -1,5 +1,5 @@
 <!-- pages/wardrobe/wardrobe.wxml -->
-<!-- 顶部分类导航（保持不变） -->
+<!-- 顶部分类导航 -->
 <view class="category-tabs">
   <block wx:for="{{['上衣', '下裙', '配饰']}}" wx:key="*this">
     <view 
@@ -14,7 +14,7 @@
 
 <!-- 筛选条件栏 -->
 <scroll-view scroll-x class="filter-bar">
-  <!-- 季节筛选（保持不变） -->
+  <!-- 季节筛选 -->
   <view 
     class="filter-item {{selectedFilters.season.length ? 'active' : ''}}"
     data-type="season"
@@ -22,11 +22,11 @@
   >
     <text>季节</text>
     <text wx:if="{{selectedFilters.season.length}}">({{selectedFilters.season.length}})</text>
+    <image class="icon-arrow" src="../../image/icon-arrow-down.png" />
   </view>
 
-  <!-- 动态筛选条件 -->
+  <!-- 上衣 -->
   <block wx:if="{{activeCategory === '上衣'}}">
-    <!-- 上衣分类的筛选条件（保持不变） -->
     <view 
       class="filter-item {{selectedFilters.sleeveType.length ? 'active' : ''}}"
       data-type="sleeveType"
@@ -34,6 +34,7 @@
     >
       <text>袖型</text>
       <text wx:if="{{selectedFilters.sleeveType.length}}">({{selectedFilters.sleeveType.length}})</text>
+      <image class="icon-arrow" src="../../image/icon-arrow-down.png" />
     </view>
     <view 
       class="filter-item {{selectedFilters.collarType.length ? 'active' : ''}}"
@@ -42,10 +43,11 @@
     >
       <text>领型</text>
       <text wx:if="{{selectedFilters.collarType.length}}">({{selectedFilters.collarType.length}})</text>
+      <image class="icon-arrow" src="../../image/icon-arrow-down.png" />
     </view>
   </block>
 
-  <!-- 新增：下裙分类的筛选条件 -->
+  <!-- 下裙 -->
   <block wx:if="{{activeCategory === '下裙'}}">
     <view 
       class="filter-item {{selectedFilters.skirtType.length ? 'active' : ''}}"
@@ -54,10 +56,11 @@
     >
       <text>类型</text>
       <text wx:if="{{selectedFilters.skirtType.length}}">({{selectedFilters.skirtType.length}})</text>
+      <image class="icon-arrow" src="../../image/icon-arrow-down.png" />
     </view>
   </block>
 
-  <!-- 新增：配饰分类的筛选条件 -->
+  <!-- 配饰 -->
   <block wx:if="{{activeCategory === '配饰'}}">
     <view 
       class="filter-item {{selectedFilters.accessoryType.length ? 'active' : ''}}"
@@ -66,6 +69,25 @@
     >
       <text>类型</text>
       <text wx:if="{{selectedFilters.accessoryType.length}}">({{selectedFilters.accessoryType.length}})</text>
+      <image class="icon-arrow" src="../../image/icon-arrow-down.png" />
     </view>
   </block>
 </scroll-view>
+
+<!-- ✅ 新增：筛选弹窗 -->
+<view wx:if="{{filterVisible}}" class="filter-popup">
+  <view class="filter-popup-mask" bindtap="closeFilter"></view>
+  <view class="filter-popup-content">
+    <view class="popup-title">选择{{currentFilterName}}</view>
+    <block wx:for="{{filterOptions}}" wx:key="*this">
+      <view 
+        class="popup-option {{selectedFilters[currentFilterType].includes(item) ? 'selected' : ''}}"
+        data-value="{{item}}"
+        bindtap="toggleFilterOption"
+      >
+        {{item}}
+      </view>
+    </block>
+    <button bindtap="applyFilter">确定</button>
+  </view>
+</view>

@@ -36,11 +36,13 @@
   padding: 20rpx;
   background: #f8f8f8;
   width: 100%;
+  overflow-x: auto; /* ★ 加横向滚动，避免太多选项挤掉 */
 }
 
 .filter-item {
   display: inline-flex;
   align-items: center;
+  justify-content: center;  /* ★ 内容居中 */
   padding: 0 25rpx;
   margin-right: 20rpx;
   height: 60rpx;
@@ -48,9 +50,56 @@
   border-radius: 30rpx;
   font-size: 26rpx;
   box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.05);
+  transition: all 0.2s; /* ★ 增加过渡 */
+}
+
+.filter-item:active { /* ★ 点击时反馈 */
+  transform: scale(0.95);
+  background: #f0f0f0;
 }
 
 .filter-item.active {
   background: #07C160;
   color: white;
+}
+
+/* 筛选弹窗样式 */
+.filter-popup {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  border-top: 1px solid #ddd;
+  z-index: 1000;
+  animation: slideUp 0.3s ease; /* ★ 动画效果 */
+  box-shadow: 0 -4rpx 10rpx rgba(0,0,0,0.1);
+  border-radius: 20rpx 20rpx 0 0; /* ★ 顶部圆角 */
+}
+
+.popup-content {
+  padding: 30rpx;
+}
+
+.popup-close {
+  margin-top: 30rpx;
+  color: #409eff;
+  text-align: center;
+  font-size: 28rpx;
+  padding: 20rpx;
+}
+.icon-arrow {
+  width: 24rpx;
+  height: 24rpx;
+  margin-left: 8rpx;
+}
+
+/* ★ 弹窗动画 */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }

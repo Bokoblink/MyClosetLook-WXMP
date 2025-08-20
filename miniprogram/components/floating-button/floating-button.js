@@ -20,7 +20,9 @@ Component({
    */
   methods: {
     onTap() {
-      this.triggerEvent('tap') // 触发父组件的事件
+      wx.navigateTo({
+        url: '/pages/add-clothes/add-clothes' // 确保路径正确
+      })
     }
   }
 })

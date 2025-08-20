@@ -2,9 +2,12 @@
 Page({
   data: {
     activeCategory: '上衣',
-    showFilterModal: false, // 控制筛选弹窗显示
-    currentFilterType: '', // 当前正在操作的筛选类型
-    availableFilters: ['season', 'sleeveType', 'collarType'], // 当前可用的筛选类型
+    showFilterModal: false,   // ✅ 控制筛选弹窗显示
+    currentFilterType: '',    // ✅ 当前正在操作的筛选类型
+    currentFilterName: '',    // ✅ 中文名
+    availableFilters: ['season', 'sleeveType', 'collarType'], // 当前分类可用的筛选
+
+    // ✅ 各筛选类型的选项
     filterOptions: {
       season: ['夏', '春秋', '冬'],
       sleeveType: ['弓袋袖', '飞机袖', '半袖', '比甲', '吊带'],
@@ -12,6 +15,8 @@ Page({
       skirtType: ['马面', '百迭', '旋裙', '破裙', '其他'],
       accessoryType: ['发簪', '禁步', '璎珞', '手链', '耳饰', '胸针']
     },
+
+    // ✅ 用户已选择的筛选条件
     selectedFilters: {
       season: [],
       sleeveType: [],
@@ -19,8 +24,11 @@ Page({
       skirtType: [],
       accessoryType: []
     },
+
     clothesList: []
   },
+
+  // 根据分类更新可用筛选
   getFilterOptions() {
     const { activeCategory } = this.data
     let options = []
@@ -35,12 +43,13 @@ Page({
     
     this.setData({ availableFilters: options })
   },
+
+  // 切换分类
   changeCategory(e) {
     const category = e.currentTarget.dataset.category
     this.setData({
       activeCategory: category,
-      // 重置筛选条件
-      selectedFilters: {
+      selectedFilters: { // ✅ 重置筛选
         season: [],
         sleeveType: [],
         collarType: [],
@@ -48,36 +57,42 @@ Page({
         accessoryType: []
       }
     }, () => {
-      this.loadClothes() // 重新加载数据
-      this.getFilterOptions() // 切换分类时更新可用筛选
+      this.loadClothes()
+      this.getFilterOptions()
     })
   },
-  stopPropagation() {
-    // 这个空方法只是为了阻止事件冒泡
-    // 不需要写任何内容
-  },
 
-  // 显示筛选弹窗
+  // 打开筛选弹窗
   showFilter(e) {
     const type = e.currentTarget.dataset.type
     this.setData({
       showFilterModal: true,
-      currentFilterType: type
+      currentFilterType: type,
+      currentFilterName: this.getFilterName(type)
+    })
+  },
+
+  // 关闭筛选弹窗
+  closeFilter() {
+    this.setData({
+      showFilterModal: false,
+      currentFilterType: '',
+      currentFilterName: ''
     })
   },
 
   // 多选切换
   toggleFilterOption(e) {
-    const { type, value } = e.currentTarget.dataset
-    const selected = this.data.selectedFilters[type]
-    const index = selected.indexOf(value)
-    
-    if (index === -1) {
-      selected.push(value)
+    const value = e.currentTarget.dataset.value
+    const type = this.data.currentFilterType
+    let selected = [...this.data.selectedFilters[type]]
+
+    if (selected.includes(value)) {
+      selected = selected.filter(v => v !== value)
     } else {
-      selected.splice(index, 1)
+      selected.push(value)
     }
-    
+
     this.setData({
       [`selectedFilters.${type}`]: selected
     })
@@ -106,14 +121,13 @@ Page({
     })
   },
 
-  // 加载衣物数据（改造后）
+  // 加载衣物数据
   loadClothes() {
     const db = wx.cloud.database()
     let query = db.collection('clothes').where({
       category: this.data.activeCategory
     })
 
-    // 动态添加筛选条件
     const filters = this.data.selectedFilters
     Object.keys(filters).forEach(key => {
       if (filters[key].length > 0) {
@@ -126,5 +140,17 @@ Page({
     query.get().then(res => {
       this.setData({ clothesList: res.data })
     })
+  },
+
+  // ✅ 获取筛选项中文名
+  getFilterName(type) {
+    const map = {
+      season: '季节',
+      sleeveType: '袖型',
+      collarType: '领型',
+      skirtType: '类型',
+      accessoryType: '类型'
+    }
+    return map[type] || ''
   }
 })
