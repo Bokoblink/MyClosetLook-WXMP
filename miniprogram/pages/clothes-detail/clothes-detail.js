@@ -1,66 +1,97 @@
-// pages/clothes-detail/clothes-detail.js
+const db = wx.cloud.database();
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    clotheDetail: null,
+    relatedOutfits: [],
+    id: ''
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad(options) {
-
+    const { id } = options;
+    if (id) {
+      this.setData({ id });
+      this.loadClotheDetail(id);
+      this.loadRelatedOutfits(id);
+    } else {
+      wx.showToast({ title: '缺少衣物ID', icon: 'none' });
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  // 加载衣物详情
+  loadClotheDetail(id) {
+    db.collection('clothes').doc(id).get()
+      .then(res => {
+        this.setData({ clotheDetail: res.data });
+      })
+      .catch(err => {
+        wx.showToast({ title: '加载失败', icon: 'none' });
+        console.error('加载衣物详情失败', err);
+      });
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  // 加载相关穿搭
+  loadRelatedOutfits(clotheId) {
+    // 假设穿搭(outfits)表中有一个叫 clothes 的数组字段，存储了衣物的ID
+    db.collection('outfits').where({
+      clothes: clotheId
+    }).get()
+      .then(res => {
+        this.setData({ relatedOutfits: res.data });
+      })
+      .catch(err => {
+        // 这里不提示失败，因为没有相关穿搭是正常情况
+        console.error('加载相关穿搭失败', err);
+      });
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  // 编辑衣物
+  editClothe() {
+    wx.navigateTo({
+      url: `../edit-clothes/edit-clothes?id=${this.data.id}`,
+    });
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  // 删除衣物
+  deleteClothe() {
+    wx.showModal({
+      title: '确认删除',
+      content: '删除后将无法恢复，包含此衣物的穿搭也会受影响，确定吗？',
+      success: (res) => {
+        if (res.confirm) {
+          this.performDelete();
+        }
+      }
+    });
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
+  async performDelete() {
+    wx.showLoading({ title: '删除中...' });
+    const { id, clotheDetail } = this.data;
 
-  },
+    try {
+      // 1. 从数据库删除记录
+      await db.collection('clothes').doc(id).remove();
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
+      // 2. 从云存储删除图片文件
+      if (clotheDetail.imageUrl) {
+        await wx.cloud.deleteFile({
+          fileList: [clotheDetail.imageUrl]
+        });
+      }
 
-  },
+      wx.hideLoading();
+      wx.showToast({ title: '删除成功' });
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
+      // 3. 返回上一页
+      setTimeout(() => {
+        wx.navigateBack();
+      }, 1500);
 
+    } catch (err) {
+      wx.hideLoading();
+      wx.showToast({ title: '删除失败', icon: 'none' });
+      console.error('删除失败', err);
+    }
   }
-})
+});

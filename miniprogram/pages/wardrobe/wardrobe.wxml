@@ -76,10 +76,10 @@
 
 <!-- 衣物列表 -->
 <view class="clothes-grid" wx:if="{{clothesList.length > 0}}">
-  <view class="clothe-item" wx:for="{{clothesList}}" wx:key="_id">
+  <navigator class="clothe-item" url="../clothes-detail/clothes-detail?id={{item._id}}" wx:for="{{clothesList}}" wx:key="_id">
     <image class="clothe-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
     <view class="clothe-name">{{item.name}}</view>
-  </view>
+  </navigator>
 </view>
 
 <!-- 空状态 -->
