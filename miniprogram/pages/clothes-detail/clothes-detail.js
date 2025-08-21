@@ -12,11 +12,23 @@ Page({
   onLoad(options) {
     const { id } = options;
     if (id) {
-      this.setData({ id });
-      this.loadClotheDetail(id);
-      this.loadRelatedOutfits(id);
+      this.setData({ id }, () => {
+        this.refreshData(); // 使用回调确保id设置后再刷新
+      });
     } else {
       wx.showToast({ title: '缺少衣物ID', icon: 'none' });
+    }
+  },
+
+  onShow() {
+    this.refreshData();
+  },
+
+  // 统一的数据刷新方法
+  refreshData() {
+    if (this.data.id) {
+      this.loadClotheDetail(this.data.id);
+      this.loadRelatedOutfits(this.data.id);
     }
   },
 
