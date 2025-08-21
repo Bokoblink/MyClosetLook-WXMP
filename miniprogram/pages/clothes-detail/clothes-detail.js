@@ -4,7 +4,9 @@ Page({
   data: {
     clotheDetail: null,
     relatedOutfits: [],
-    id: ''
+    id: '',
+    hasSizes: false, // ★ 新增一个标志位，判断有无尺寸信息
+    sortedSizes: [] // ★ 新增一个数组，用来存放排序后的尺寸
   },
 
   onLoad(options) {
@@ -22,7 +24,24 @@ Page({
   loadClotheDetail(id) {
     db.collection('clothes').doc(id).get()
       .then(res => {
-        this.setData({ clotheDetail: res.data });
+        const clothe = res.data;
+        
+        // --- 尺寸排序逻辑 ---
+        const SIZE_ORDER = ['衣长', '胸围', '通袖', '领围', '袖口', '袖根', '裙长', '腰围', '裙门', '裙腰长', '摆围'];
+        const sizes = clothe.sizes || {};
+        const sortedSizes = [];
+        SIZE_ORDER.forEach(key => {
+          if (sizes[key]) {
+            sortedSizes.push({ key: key, value: sizes[key] });
+          }
+        });
+        // --- 排序逻辑结束 ---
+
+        this.setData({ 
+          clotheDetail: clothe,
+          hasSizes: sortedSizes.length > 0, // 更新hasSizes的判断逻辑
+          sortedSizes: sortedSizes
+        });
       })
       .catch(err => {
         wx.showToast({ title: '加载失败', icon: 'none' });

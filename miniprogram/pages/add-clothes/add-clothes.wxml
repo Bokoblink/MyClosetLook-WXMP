@@ -48,10 +48,10 @@
     
     <view class="size-section">
       <text class="sub-label">尺寸</text>
-      <view class="form-item"><text class="label">衣长</text><input class="input" placeholder="例如: 100cm" value="{{sizes['衣长']}}" bindinput="onSizeInput" data-key="衣长" /></view>
-      <view class="form-item"><text class="label">领围</text><input class="input" placeholder="例如: 40cm" value="{{sizes['领围']}}" bindinput="onSizeInput" data-key="领围" /></view>
+      <view class="form-item"><text class="label">衣长</text><input class="input" placeholder="例如: 70cm" value="{{sizes['衣长']}}" bindinput="onSizeInput" data-key="衣长" /></view>
       <view class="form-item"><text class="label">胸围</text><input class="input" placeholder="例如: 120cm" value="{{sizes['胸围']}}" bindinput="onSizeInput" data-key="胸围" /></view>
       <view class="form-item"><text class="label">通袖</text><input class="input" placeholder="例如: 180cm" value="{{sizes['通袖']}}" bindinput="onSizeInput" data-key="通袖" /></view>
+      <view class="form-item"><text class="label">领围</text><input class="input" placeholder="例如: 40cm" value="{{sizes['领围']}}" bindinput="onSizeInput" data-key="领围" /></view>
       <view class="form-item"><text class="label">袖口</text><input class="input" placeholder="例如: 30cm" value="{{sizes['袖口']}}" bindinput="onSizeInput" data-key="袖口" /></view>
       <view class="form-item"><text class="label">袖根</text><input class="input" placeholder="例如: 50cm" value="{{sizes['袖根']}}" bindinput="onSizeInput" data-key="袖根" /></view>
     </view>
@@ -68,6 +68,10 @@
     <view class="size-section">
         <text class="sub-label">尺寸</text>
         <view class="form-item"><text class="label">裙长</text><input class="input" placeholder="例如: 100cm" value="{{sizes['裙长']}}" bindinput="onSizeInput" data-key="裙长" /></view>
+        <view class="form-item"><text class="label">腰围</text><input class="input" placeholder="例如: 70cm" value="{{sizes['腰围']}}" bindinput="onSizeInput" data-key="腰围" /></view>
+        <view class="form-item"><text class="label">裙门</text><input class="input" placeholder="例如: 20cm" value="{{sizes['裙门']}}" bindinput="onSizeInput" data-key="裙门" /></view>
+        <view class="form-item"><text class="label">裙腰长</text><input class="input" placeholder="例如: 100cm" value="{{sizes['裙腰长']}}" bindinput="onSizeInput" data-key="裙腰长" /></view>
+        <view class="form-item"><text class="label">摆围</text><input class="input" placeholder="例如: 3m" value="{{sizes['摆围']}}" bindinput="onSizeInput" data-key="摆围" /></view>
     </view>
   </block>
 

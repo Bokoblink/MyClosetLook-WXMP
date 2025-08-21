@@ -41,13 +41,13 @@
   </view>
 
   <!-- 尺寸信息 -->
-  <view class="section size-section" wx:if="{{clotheDetail.sizes && Object.keys(clotheDetail.sizes).length}}">
+  <view class="section size-section" wx:if="{{hasSizes}}">
     <view class="title">尺寸信息</view>
     <view class="info-grid">
-      <block wx:for="{{clotheDetail.sizes}}" wx:for-item="sizeValue" wx:for-index="sizeKey" wx:key="sizeKey">
-        <view class="info-item" wx:if="{{sizeValue}}">
-          <text class="label">{{sizeKey}}</text>
-          <text class="value">{{sizeValue}}</text>
+      <block wx:for="{{sortedSizes}}" wx:key="key">
+        <view class="info-item">
+          <text class="label">{{item.key}}</text>
+          <text class="value">{{item.value}}</text>
         </view>
       </block>
     </view>
