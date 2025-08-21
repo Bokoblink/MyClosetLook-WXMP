@@ -15,7 +15,7 @@ Page({
     wx.showLoading({ title: '加载中...' })
     
     const db = wx.cloud.database()
-    let query = db.collection('outfit')
+    let query = db.collection('outfits')
     
     // 季节筛选
     if (this.data.activeSeason !== '全部') {
