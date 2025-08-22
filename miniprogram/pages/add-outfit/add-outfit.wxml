@@ -57,7 +57,7 @@
   <!-- 配饰区 -->
   <view class="category-section">
     <view class="category-header">
-      <text class="title">配饰 (选填)</text>
+      <text class="title">配饰</text>
       <button class="add-btn" size="mini" bindtap="openSelector" data-category="配饰">+ 添加</button>
     </view>
     <view class="clothes-container">
