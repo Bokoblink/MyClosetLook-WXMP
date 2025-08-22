@@ -73,6 +73,7 @@
 .title {
   font-size: 32rpx;
   font-weight: bold;
+  flex-grow: 1; /* 让标题占据多余空间，将按钮推到右边 */
 }
 
 .add-btn {

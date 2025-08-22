@@ -20,9 +20,8 @@ Component({
    */
   methods: {
     onTap() {
-      wx.navigateTo({
-        url: '/pages/add-clothes/add-clothes' // 确保路径正确
-      })
+      // 触发父组件的自定义事件，让父页面自己决定做什么
+      this.triggerEvent('tap');
     }
   }
 })

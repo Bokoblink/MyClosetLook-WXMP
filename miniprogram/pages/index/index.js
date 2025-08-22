@@ -7,7 +7,11 @@ Page({
   },
 
   onLoad() {
-    this.loadOutfits()
+    // this.loadOutfits() // onLoad时不再需要，因为onShow会执行
+  },
+
+  onShow() {
+    this.loadOutfits();
   },
 
   // 加载穿搭数据

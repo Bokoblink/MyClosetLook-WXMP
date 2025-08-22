@@ -15,10 +15,8 @@
   <view class="outfit-list">
     <block wx:for="{{outfits}}" wx:key="_id">
       <view class="outfit-item" bindtap="viewDetail" data-id="{{item._id}}">
-        <image 
-          src="{{item.coverImage || (item.items[0] && item.items[0].imageUrl) || '/images/default-outfit.png'}}" 
-          mode="aspectFill"
-        ></image>
+        <image src="{{item.outfitImageUrl || '/images/default-outfit.png'}}" mode="aspectFill"></image>
+        <view class="outfit-name">{{item.name}}</view>
       </view>
     </block>
     
