@@ -80,9 +80,19 @@
     <view class="close-btn" bindtap="closeSelector">完成</view>
   </view>
 
-  <!-- TODO: 筛选区域 -->
+  <!-- 筛选区域 -->
   <view class="filter-section">
-    <text>筛选功能待添加</text>
+    <scroll-view scroll-x class="filter-scroll">
+      <view 
+        wx:for="{{filterOptions}}" 
+        wx:key="*this"
+        class="filter-item {{currentFilter === item ? 'active' : ''}}"
+        bindtap="onFilterTap"
+        data-filter="{{item}}"
+      >
+        {{item}}
+      </view>
+    </scroll-view>
   </view>
 
   <scroll-view scroll-y class="selector-list">

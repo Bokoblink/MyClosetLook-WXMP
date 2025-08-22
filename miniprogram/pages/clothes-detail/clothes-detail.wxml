@@ -63,13 +63,10 @@
   <view class="section related-outfits-section" wx:if="{{relatedOutfits.length > 0}}">
     <view class="title">包含此衣服的穿搭</view>
     <scroll-view scroll-x class="outfits-scroll">
-      <view class="outfit-item" wx:for="{{relatedOutfits}}" wx:key="_id">
-        <!-- 导航功能暂时禁用，等 outfit-detail 页面做好后开启 -->
-        <!-- <navigator url="/pages/outfit-detail/outfit-detail?id={{item._id}}"> -->
+      <navigator class="outfit-item" wx:for="{{relatedOutfits}}" wx:key="_id" url="../outfit-detail/outfit-detail?id={{item._id}}">
         <image class="outfit-image" src="{{item.outfitImageUrl}}" mode="aspectFill"></image>
         <view class="outfit-name">{{item.name}}</view>
-        <!-- </navigator> -->
-      </view>
+      </navigator>
     </scroll-view>
   </view>
 
