@@ -6,6 +6,13 @@
       <text class="label required">穿搭名称</text>
       <input class="input" placeholder="给这套穿搭起个名字吧" value="{{name}}" bindinput="onInput" data-key="name"/>
     </view>
+    
+    <view class="form-item">
+      <text class="label">季节</text>
+      <picker mode="selector" range="{{seasons}}" bindchange="onSeasonChange">
+        <view class="input picker">{{season || '请选择季节'}}</view>
+      </picker>
+    </view>
 
     <view class="form-item">
       <text class="label">穿搭图</text>

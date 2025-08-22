@@ -4,6 +4,8 @@ Page({
   data: {
     name: "",
     outfitImage: "", // 本地临时路径
+    season: "", // ★ 新增季节
+    seasons: ["夏", "春秋", "冬"], // ★ 新增季节选项
 
     // --- 已选中的衣物 ---
     selectedTops: [],
@@ -21,6 +23,10 @@ Page({
   // --- 主页面逻辑 ---
   onInput(e) {
     this.setData({ name: e.detail.value });
+  },
+
+  onSeasonChange(e) { // ★ 新增季节选择事件处理
+    this.setData({ season: this.data.seasons[e.detail.value] });
   },
 
   chooseOutfitImage() {
@@ -160,6 +166,7 @@ Page({
           name: this.data.name,
           outfitImageUrl: outfitImageUrl,
           clothes: clothesIds,
+          season: this.data.season, // ★ 保存季节信息
           createdAt: db.serverDate()
         }
       });

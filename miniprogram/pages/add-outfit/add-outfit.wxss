@@ -37,6 +37,15 @@
   font-size: 28rpx;
 }
 
+.picker {
+  /* 通过设置line-height=height来垂直居中文字 */
+  line-height: 88rpx;
+}
+
+.picker.placeholder-style {
+  color: #999;
+}
+
 .upload-box {
   width: 200rpx;
   height: 200rpx;
