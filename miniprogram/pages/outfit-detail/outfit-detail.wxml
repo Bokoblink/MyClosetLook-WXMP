@@ -39,4 +39,10 @@
     </view>
   </view>
 
+  <!-- 操作按钮 -->
+  <view class="action-bar">
+    <button class="action-btn edit-btn" bindtap="editOutfit">编辑</button>
+    <button class="action-btn delete-btn" bindtap="deleteOutfit">删除</button>
+  </view>
+
 </view>
