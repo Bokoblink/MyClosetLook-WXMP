@@ -110,7 +110,7 @@ Page({
   // --- Core Logic ---
 
   // 保存更新
-  async saveClothe() {
+  async updateClothe() {
     if (!this.data.name || !this.data.category) {
       wx.showToast({ title: "名称和分类为必填项", icon: "none" });
       return;
