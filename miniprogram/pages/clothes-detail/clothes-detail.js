@@ -37,9 +37,8 @@ Page({
     db.collection('clothes').doc(id).get()
       .then(res => {
         const clothe = res.data;
-        
         // --- 尺寸排序逻辑 ---
-        const SIZE_ORDER = ['衣长', '胸围', '通袖', '领围', '袖口', '袖根', '裙长', '腰围', '裙门', '裙腰长', '摆围'];
+        const SIZE_ORDER = ['尺码', '衣长', '胸围', '通袖', '领围', '袖口', '袖根', '裙长', '腰围', '裙门', '裙腰长', '摆围'];
         const sizes = clothe.sizes || {};
         const sortedSizes = [];
         SIZE_ORDER.forEach(key => {
