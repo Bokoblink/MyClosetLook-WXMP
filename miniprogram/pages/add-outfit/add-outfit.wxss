@@ -42,6 +42,31 @@
   line-height: 88rpx;
 }
 
+/* --- 选择器带清除按钮的样式 --- */
+.picker-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8rpx;
+  height: 88rpx;
+  padding: 0 15rpx;
+}
+
+.picker-content {
+  flex: 1;
+  font-size: 28rpx;
+}
+
+.picker-content.placeholder-style {
+  color: #999;
+}
+
+.clear-btn {
+  font-size: 36rpx;
+  color: #bbb;
+  padding-left: 20rpx;
+}
+
 .picker.placeholder-style {
   color: #999;
 }

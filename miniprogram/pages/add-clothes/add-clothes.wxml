@@ -12,38 +12,50 @@
   <!-- 衣物名称 -->
   <view class="form-item">
     <text class="label required">衣物名称</text>
-    <input placeholder="请输入名称" value="{{name}}" data-key="name" bindinput="onInput"/>
+    <input class="input" placeholder="请输入名称" value="{{name}}" data-key="name" bindinput="onInput"/>
   </view>
 
   <!-- 分类 -->
   <view class="form-item">
     <text class="label required">分类</text>
-    <picker mode="selector" range="{{categories}}" bindchange="onCategoryChange">
-      <view class="picker">{{category || '请选择分类'}}</view>
-    </picker>
+    <view class="picker-container">
+      <picker mode="selector" range="{{categories}}" bindchange="onCategoryChange">
+        <view class="picker-content {{category ? '' : 'placeholder-style'}}">{{category || '请选择分类'}}</view>
+      </picker>
+      <view wx:if="{{category}}" class="clear-btn" bindtap="clearPicker" data-key="category">×</view>
+    </view>
   </view>
 
   <!-- 季节 -->
   <view class="form-item">
     <text class="label">季节</text>
-    <picker mode="selector" range="{{seasons}}" bindchange="onSeasonChange">
-      <view class="picker">{{season || '请选择季节'}}</view>
-    </picker>
+    <view class="picker-container">
+      <picker mode="selector" range="{{seasons}}" bindchange="onSeasonChange">
+        <view class="picker-content {{season ? '' : 'placeholder-style'}}">{{season || '请选择季节'}}</view>
+      </picker>
+      <view wx:if="{{season}}" class="clear-btn" bindtap="clearPicker" data-key="season">×</view>
+    </view>
   </view>
 
   <!-- 上衣专属 -->
   <block wx:if="{{category == '上衣'}}">
     <view class="form-item">
       <text class="label">袖型</text>
-      <picker mode="selector" range="{{sleeveTypes}}" bindchange="onSleeveChange">
-        <view class="picker">{{sleeveType || '请选择袖型'}}</view>
-      </picker>
+      <view class="picker-container">
+        <picker mode="selector" range="{{sleeveTypes}}" bindchange="onSleeveChange">
+          <view class="picker-content {{sleeveType ? '' : 'placeholder-style'}}">{{sleeveType || '请选择袖型'}}</view>
+        </picker>
+        <view wx:if="{{sleeveType}}" class="clear-btn" bindtap="clearPicker" data-key="sleeveType">×</view>
+      </view>
     </view>
     <view class="form-item">
       <text class="label">领型</text>
-      <picker mode="selector" range="{{collarTypes}}" bindchange="onCollarChange">
-        <view class="picker">{{collarType || '请选择领型'}}</view>
-      </picker>
+      <view class="picker-container">
+        <picker mode="selector" range="{{collarTypes}}" bindchange="onCollarChange">
+          <view class="picker-content {{collarType ? '' : 'placeholder-style'}}">{{collarType || '请选择领型'}}</view>
+        </picker>
+        <view wx:if="{{collarType}}" class="clear-btn" bindtap="clearPicker" data-key="collarType">×</view>
+      </view>
     </view>
     
     <view class="size-section">
@@ -61,9 +73,12 @@
   <block wx:if="{{category == '下裙'}}">
     <view class="form-item">
       <text class="label">类型</text>
-      <picker mode="selector" range="{{skirtTypes}}" bindchange="onSkirtTypeChange">
-        <view class="picker">{{skirtType || '请选择类型'}}</view>
-      </picker>
+      <view class="picker-container">
+        <picker mode="selector" range="{{skirtTypes}}" bindchange="onSkirtTypeChange">
+          <view class="picker-content {{skirtType ? '' : 'placeholder-style'}}">{{skirtType || '请选择类型'}}</view>
+        </picker>
+        <view wx:if="{{skirtType}}" class="clear-btn" bindtap="clearPicker" data-key="skirtType">×</view>
+      </view>
     </view>
     <view class="size-section">
         <text class="sub-label">尺寸</text>
@@ -79,9 +94,12 @@
   <block wx:if="{{category == '配饰'}}">
     <view class="form-item">
       <text class="label">类型</text>
-      <picker mode="selector" range="{{accessoryTypes}}" bindchange="onAccessoryTypeChange">
-        <view class="picker">{{accessoryType || '请选择类型'}}</view>
-      </picker>
+      <view class="picker-container">
+        <picker mode="selector" range="{{accessoryTypes}}" bindchange="onAccessoryTypeChange">
+          <view class="picker-content {{accessoryType ? '' : 'placeholder-style'}}">{{accessoryType || '请选择类型'}}</view>
+        </picker>
+        <view wx:if="{{accessoryType}}" class="clear-btn" bindtap="clearPicker" data-key="accessoryType">×</view>
+      </view>
     </view>
   </block>
 

@@ -29,7 +29,14 @@ Page({
 
   // --- 主页面逻辑 ---
   onInput(e) { this.setData({ name: e.detail.value }); },
-  onSeasonChange(e) { this.setData({ season: this.data.seasons[e.detail.value] }); },
+    onSeasonChange(e) { // ★ 新增季节选择事件处理
+    this.setData({ season: this.data.seasons[e.detail.value] });
+  },
+
+  clearPicker(e) {
+    const { key } = e.currentTarget.dataset;
+    this.setData({ [key]: "" });
+  },
   chooseOutfitImage() {
     wx.chooseImage({
       count: 1,

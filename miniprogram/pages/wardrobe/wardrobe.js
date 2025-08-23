@@ -112,21 +112,14 @@ Page({
     this.loadClothes()
   },
 
-  // 重置筛选
+  // 重置当前筛选
   resetFilter() {
-    const resetFilters = {
-      season: [],
-      sleeveType: [],
-      collarType: [],
-      skirtType: [],
-      accessoryType: []
-    }
+    const { currentFilterType } = this.data;
+    if (!currentFilterType) return;
+
     this.setData({
-      selectedFilters: resetFilters,
-      showFilterModal: false
-    }, () => {
-      this.loadClothes()
-    })
+      [`selectedFilters.${currentFilterType}`]: [],
+    });
   },
 
   // 加载衣物数据

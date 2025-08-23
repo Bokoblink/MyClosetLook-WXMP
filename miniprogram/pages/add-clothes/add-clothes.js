@@ -85,6 +85,11 @@ Page({
     });
   },
 
+  clearPicker(e) {
+    const { key } = e.currentTarget.dataset;
+    this.setData({ [key]: "" });
+  },
+
   // --- Core Logic ---
 
   // 保存

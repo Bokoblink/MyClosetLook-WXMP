@@ -106,3 +106,28 @@ textarea {
 .size-section .input {
   flex-grow: 1; /* 输入框占据剩余空间 */
 }
+
+/* --- 选择器带清除按钮的样式 --- */
+.picker-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8rpx;
+  height: 88rpx;
+  padding: 0 15rpx;
+}
+
+.picker-content {
+  flex: 1;
+  font-size: 28rpx;
+}
+
+.picker-content.placeholder-style {
+  color: #999;
+}
+
+.clear-btn {
+  font-size: 36rpx;
+  color: #bbb;
+  padding-left: 20rpx;
+}
