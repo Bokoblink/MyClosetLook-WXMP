@@ -70,7 +70,9 @@
   </view>
 
   <!-- 保存按钮 -->
-  <button class="save-btn" bindtap="updateOutfit">保存更新</button>
+  <view class="action-bar">
+    <button class="save-btn" bindtap="updateOutfit">保存更新</button>
+  </view>
 </view>
 
 <!-- 衣物选择全屏弹窗 -->

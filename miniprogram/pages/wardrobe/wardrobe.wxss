@@ -37,6 +37,7 @@
   background: #f8f8f8;
   width: 100%;
   overflow-x: auto; /* ★ 加横向滚动，避免太多选项挤掉 */
+  box-sizing: border-box; /* ★ 核心修复：让padding包含在width内 */
 }
 
 .filter-item {

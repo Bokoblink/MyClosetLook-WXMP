@@ -164,10 +164,20 @@
 .save-btn {
   background: #07C160;
   color: white;
+  flex: 1;
+}
+
+.action-bar {
   position: fixed;
-  bottom: 30rpx;
-  left: 30rpx;
-  right: 30rpx;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  background-color: #fff;
+  border-top: 1rpx solid #f0f0f0;
+  z-index: 100;
 }
 
 /* --- 选择弹窗样式 --- */

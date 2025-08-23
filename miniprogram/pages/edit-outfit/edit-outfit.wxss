@@ -42,6 +42,31 @@
   line-height: 88rpx;
 }
 
+/* --- 选择器带清除按钮的样式 --- */
+.picker-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8rpx;
+  height: 88rpx;
+  padding: 0 15rpx;
+}
+
+.picker-content {
+  flex: 1;
+  font-size: 28rpx;
+}
+
+.picker-content.placeholder-style {
+  color: #999;
+}
+
+.clear-btn {
+  font-size: 36rpx;
+  color: #bbb;
+  padding-left: 20rpx;
+}
+
 .picker.placeholder-style {
   color: #999;
 }
@@ -139,10 +164,20 @@
 .save-btn {
   background: #07C160;
   color: white;
+  flex: 1;
+}
+
+.action-bar {
   position: fixed;
-  bottom: 30rpx;
-  left: 30rpx;
-  right: 30rpx;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  background-color: #fff;
+  border-top: 1rpx solid #f0f0f0;
+  z-index: 100;
 }
 
 /* --- 选择弹窗样式 --- */

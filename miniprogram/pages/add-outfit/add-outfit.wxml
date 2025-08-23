@@ -73,7 +73,9 @@
   </view>
 
   <!-- 保存按钮 -->
-  <button class="save-btn" bindtap="saveOutfit">保存穿搭</button>
+  <view class="action-bar">
+    <button class="save-btn" bindtap="saveOutfit">保存穿搭</button>
+  </view>
 </view>
 
 <!-- 衣物选择全屏弹窗 -->

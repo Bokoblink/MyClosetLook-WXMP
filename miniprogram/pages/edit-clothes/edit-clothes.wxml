@@ -94,5 +94,7 @@
   </view>
 
   <!-- 保存按钮 -->
-  <button class="save-btn" bindtap="saveClothe">保存</button>
+  <view class="action-bar">
+    <button class="save-btn" bindtap="updateClothe">保存更新</button>
+  </view>
 </view>

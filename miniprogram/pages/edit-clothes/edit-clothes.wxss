@@ -15,6 +15,12 @@
   font-size: 30rpx;
 }
 
+.label.required::after {
+  content: '*';
+  color: #fa5151;
+  margin-left: 8rpx;
+}
+
 input, .picker, textarea {
   border: 1px solid #ddd;
   border-radius: 8rpx;
@@ -61,11 +67,20 @@ textarea {
 .save-btn {
   background: #07C160;
   color: white;
-  border-radius: 8rpx;
+  flex: 1; /* 占据全部空间 */
+}
+
+.action-bar {
   position: fixed;
-  bottom: 30rpx;
-  left: 30rpx;
-  right: 30rpx;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom)); /* 适配iPhoneX等全面屏 */
+  background-color: #fff;
+  border-top: 1rpx solid #f0f0f0;
+  z-index: 100; /* 确保在最上层 */
 }
 
 .size-section {
@@ -99,4 +114,29 @@ textarea {
 
 .size-section .input {
   flex-grow: 1; /* 输入框占据剩余空间 */
+}
+
+/* --- 选择器带清除按钮的样式 --- */
+.picker-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8rpx;
+  height: 88rpx;
+  padding: 0 15rpx;
+}
+
+.picker-content {
+  flex: 1;
+  font-size: 28rpx;
+}
+
+.picker-content.placeholder-style {
+  color: #999;
+}
+
+.clear-btn {
+  font-size: 36rpx;
+  color: #bbb;
+  padding-left: 20rpx;
 }
