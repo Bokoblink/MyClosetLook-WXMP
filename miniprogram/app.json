@@ -8,7 +8,8 @@
     "pages/add-outfit/add-outfit",
     "pages/outfit-detail/outfit-detail",
     "pages/edit-tags/edit-tags",
-    "pages/edit-outfit/edit-outfit"
+    "pages/edit-outfit/edit-outfit",
+    "pages/tags-manage/tags-manage"
   ],
   "window": {
     "navigationBarTitleText": "我的穿搭",
@@ -29,6 +30,12 @@
       {
         "pagePath": "pages/wardrobe/wardrobe",
         "text": "衣橱",
+        "iconPath": "images/tab-wardrobe.png",
+        "selectedIconPath": "images/tab-wardrobe-active.png"
+      },
+      {
+        "pagePath": "pages/tags-manage/tags-manage",
+        "text": "分类",
         "iconPath": "images/tab-wardrobe.png",
         "selectedIconPath": "images/tab-wardrobe-active.png"
       }
