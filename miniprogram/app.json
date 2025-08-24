@@ -36,8 +36,8 @@
       {
         "pagePath": "pages/tags-manage/tags-manage",
         "text": "分类",
-        "iconPath": "images/tab-wardrobe.png",
-        "selectedIconPath": "images/tab-wardrobe-active.png"
+        "iconPath": "images/tab-tags.png",
+        "selectedIconPath": "images/tab-tags-active.png"
       }
     ]
   },
