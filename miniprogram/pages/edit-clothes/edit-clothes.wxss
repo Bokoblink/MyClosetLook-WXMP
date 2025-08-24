@@ -21,7 +21,8 @@
   margin-left: 8rpx;
 }
 
-input, .picker, textarea {
+/* 统一表单元素基础样式 */
+input, textarea, .picker-container {
   border: 1px solid #ddd;
   border-radius: 8rpx;
   font-size: 28rpx;
@@ -29,19 +30,16 @@ input, .picker, textarea {
   box-sizing: border-box;
 }
 
-/* 为单行输入框和选择器设置固定高度和垂直居中 */
-input,
-.picker {
+/* 输入框独有样式 */
+input {
   height: 88rpx;
   padding: 0 15rpx;
-  display: flex;
-  align-items: center;
 }
 
 /* 备注的多行文本框样式 */
 textarea {
   height: 150rpx;
-  padding: 15rpx;
+  padding: 15rpx; /* textarea需要垂直padding */
 }
 
 .upload-box {
@@ -124,6 +122,10 @@ textarea {
   border-radius: 8rpx;
   height: 88rpx;
   padding: 0 15rpx;
+}
+
+.picker-container picker {
+  flex: 1; /* 让picker组件自身撑满剩余空间 */
 }
 
 .picker-content {
