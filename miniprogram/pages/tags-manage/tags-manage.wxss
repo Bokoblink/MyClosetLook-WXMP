@@ -31,17 +31,20 @@
   margin-bottom: 20rpx;
 }
 
-.card-name {
+/* 1. 标题加粗 (参考add-outfit.wxss) */
+.title {
   font-size: 32rpx;
-  font-weight: 500;
+  font-weight: bold;
 }
 
+/* 1. 添加按钮样式 (参考add-outfit.wxss) */
 .add-btn {
-  background-color: #07C160;
-  color: #fff;
-  padding: 8rpx 20rpx;
-  border-radius: 30rpx;
-  font-size: 28rpx;
+  background-color: #07c160;
+  color: white;
+  /* 移除了button的默认边框和边距 */
+  margin: 0;
+  padding: 0 24rpx;
+  line-height: 2.3;
 }
 
 .tag-list {
@@ -54,7 +57,7 @@
   display: flex;
   align-items: center;
   background-color: #f0f0f0;
-  padding: 10rpx 20rpx;
+  padding: 10rpx 15rpx;
   border-radius: 8rpx;
   font-size: 28rpx;
 }
@@ -86,29 +89,20 @@
 
 .actions {
   display: flex;
-  gap: 10rpx;
+  gap: 20rpx;
 }
 
+/* 3 & 4. 编辑和删除按钮新样式 */
 .edit-btn,
 .delete-btn {
-  margin-left: 20rpx;
-  color: #fff;
-  border-radius: 50%;
-  width: 40rpx;
-  height: 40rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24rpx;
-  line-height: 40rpx;
+  font-size: 36rpx;
+  color: #bbb;
+  padding: 0 10rpx;
 }
 
-.edit-btn {
-  background-color: #ffc300;
-}
-
-.delete-btn {
-  background-color: #ff4d4f;
+.edit-btn:hover,
+.delete-btn:hover {
+  color: #333;
 }
 
 /* 弹窗样式 */
@@ -122,6 +116,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 
 .modal-dialog {
@@ -140,6 +135,13 @@
   margin-bottom: 30rpx;
 }
 
+/* 5. 弹窗副标题样式 */
+.modal-subtitle {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
 .modal-input {
   border: 1rpx solid #ddd;
   border-radius: 8rpx;
@@ -152,6 +154,7 @@
   display: flex;
   justify-content: space-between;
   gap: 20rpx;
+  margin-top: 20rpx;
 }
 
 .modal-buttons button {

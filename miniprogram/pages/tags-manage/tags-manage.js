@@ -1,5 +1,4 @@
 const db = wx.cloud.database();
-const _ = db.command;
 
 Page({
   data: {
@@ -53,6 +52,7 @@ Page({
     this.setData({ showModal: false });
   },
 
+  // BUG FIX 1: 添加缺失的 onModalInput 函数
   onModalInput(e) {
     const { key } = e.currentTarget.dataset;
     if (this.data.modalType === 'attribute') {
@@ -108,15 +108,16 @@ Page({
     const tag = this.findTagById(tagId);
     if (tag.options.includes(option)) return wx.showToast({ title: '选项已存在', icon: 'none' });
     
-    await this.updateTag(tagId, { options: _.push(option) });
+    await this.callUpdateTag(tagId, 'PUSH_OPTION', option);
   },
 
   async addSizeField(tagId, field) {
-    if (!field.key || !field.placeholder) return wx.showToast({ title: '字段名和提示词都不能为空', icon: 'none' });
+    // BUG FIX 4: 提示词改为非必填
+    if (!field.key) return wx.showToast({ title: '字段名不能为空', icon: 'none' });
     const tag = this.findTagById(tagId);
     if (tag.fields.some(f => f.key === field.key)) return wx.showToast({ title: '字段名已存在', icon: 'none' });
 
-    await this.updateTag(tagId, { fields: _.push(field) });
+    await this.callUpdateTag(tagId, 'PUSH_FIELD', field);
   },
 
   async updateSizeField(tagId, fieldKey, newPlaceholder) {
@@ -124,9 +125,9 @@ Page({
     const fieldIndex = tag.fields.findIndex(f => f.key === fieldKey);
     if (fieldIndex === -1) return;
 
-    // 小程序直接更新数组内对象需要用点表示法
-    const updateKey = `fields.${fieldIndex}.placeholder`;
-    await this.updateTag(tagId, { [updateKey]: newPlaceholder });
+    const updatePayload = {};
+    updatePayload[`fields.${fieldIndex}.placeholder`] = newPlaceholder;
+    await this.callUpdateTag(tagId, 'UPDATE_FIELD', updatePayload);
   },
 
   handleDeleteOption(e) {
@@ -136,7 +137,7 @@ Page({
       content: `确定要删除选项 "${option}" 吗？此操作不可恢复。`,
       success: async (res) => {
         if (res.confirm) {
-          await this.updateTag(tagId, { options: _.pull(option) });
+          await this.callUpdateTag(tagId, 'PULL_OPTION', option);
         }
       }
     });
@@ -149,24 +150,36 @@ Page({
       content: `确定要删除字段 "${fieldKey}" 吗？此操作不可恢复。`,
       success: async (res) => {
         if (res.confirm) {
-          await this.updateTag(tagId, { fields: _.pull({ key: fieldKey }) });
+          await this.callUpdateTag(tagId, 'PULL_FIELD', fieldKey);
         }
       }
     });
   },
 
   // --- DB & Helpers ---
-  async updateTag(tagId, updateData) {
+  async callUpdateTag(tagId, action, payload) {
     wx.showLoading({ title: '更新中...' });
     try {
-      await db.collection('tags').doc(tagId).update({ data: updateData });
+      const res = await wx.cloud.callFunction({
+        name: 'updateTag',
+        data: {
+          tagId: tagId,
+          action: action,
+          payload: payload
+        }
+      });
+
+      if (!res.result || !res.result.success) {
+        throw new Error(res.result.message || '云函数调用失败');
+      }
+
       wx.hideLoading();
       wx.showToast({ title: '更新成功' });
       this.loadTags(); // Refresh local data
     } catch (err) {
       wx.hideLoading();
       console.error('更新失败', err);
-      wx.showToast({ title: '更新失败', icon: 'none' });
+      wx.showToast({ title: `更新失败: ${err.message}` , icon: 'none' });
     }
   },
 

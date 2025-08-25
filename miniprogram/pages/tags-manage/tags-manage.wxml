@@ -8,8 +8,8 @@
     <block wx:for="{{group.tags}}" wx:for-item="tag" wx:key="_id">
       <view class="tag-card">
         <view class="card-header">
-          <text class="card-name">{{tag.name}}</text>
-          <button class="add-btn" size="mini" bindtap="showAddModal" data-tag-id="{{tag._id}}" data-type="{{tag.type}}">+</button>
+          <text class="title">{{tag.name}}</text>
+          <button class="add-btn" size="mini" bindtap="showAddModal" data-tag-id="{{tag._id}}" data-type="{{tag.type}}">+ 添加</button>
         </view>
 
         <!-- 属性标签列表 -->
@@ -48,14 +48,20 @@
   <view class="modal-dialog">
     <view class="modal-title">{{modalTitle}}</view>
     
-    <!-- 新增/编辑属性 -->
+    <!-- 新增属性 -->
     <block wx:if="{{modalType === 'attribute'}}">
       <input class="modal-input" placeholder="请输入新选项名称" value="{{inputValue}}" bindinput="onModalInput" />
     </block>
 
-    <!-- 新增/编辑尺寸字段 -->
-    <block wx:if="{{modalType === 'size'}}">
-      <input class="modal-input" placeholder="请输入字段名称 (如: 肩宽)" value="{{newField.key}}" bindinput="onModalInput" data-key="key" disabled="{{isEditMode}}"/>
+    <!-- 新增尺寸字段 -->
+    <block wx:if="{{modalType === 'size' && !isEditMode}}">
+      <input class="modal-input" placeholder="请输入字段名称 (如: 肩宽)" value="{{newField.key}}" bindinput="onModalInput" data-key="key"/>
+      <input class="modal-input" placeholder="请输入提示词 (如: 70cm)" value="{{newField.placeholder}}" bindinput="onModalInput" data-key="placeholder"/>
+    </block>
+
+    <!-- 编辑尺寸字段提示词 -->
+    <block wx:if="{{modalType === 'size' && isEditMode}}">
+      <view class="modal-subtitle">请输入提示词</view>
       <input class="modal-input" placeholder="请输入提示词 (如: 70cm)" value="{{newField.placeholder}}" bindinput="onModalInput" data-key="placeholder"/>
     </block>
 
