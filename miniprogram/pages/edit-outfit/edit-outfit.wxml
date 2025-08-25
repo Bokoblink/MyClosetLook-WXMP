@@ -1,4 +1,4 @@
-<!-- pages/add-outfit/add-outfit.wxml -->
+<!-- pages/edit-outfit/edit-outfit.wxml -->
 <view class="container">
   <!-- 表单主体 -->
   <view class="form-section">
@@ -9,9 +9,13 @@
     
     <view class="form-item">
       <text class="label">季节</text>
-      <picker mode="selector" range="{{seasons}}" bindchange="onSeasonChange">
-        <view class="input picker {{season ? '' : 'placeholder-style'}}">{{season || '请选择季节'}}</view>
-      </picker>
+      <!-- 修正：使用和其他页面统一的picker容器和样式 -->
+      <view class="picker-container">
+        <picker mode="selector" range="{{seasons}}" value="{{seasons.indexOf(season)}}" bindchange="onSeasonChange">
+          <view class="picker-content {{season ? '' : 'placeholder-style'}}">{{season || '请选择季节'}}</view>
+        </picker>
+        <view wx:if="{{season}}" class="clear-btn" bindtap="clearPicker" data-key="season">×</view>
+      </view>
     </view>
 
     <view class="form-item">
@@ -20,7 +24,7 @@
         <image wx:if="{{outfitImage}}" src="{{outfitImage}}" class="preview" mode="aspectFill"></image>
         <view wx:else class="upload-placeholder">+ 上传图片</view>
       </view>
-      <view class="form-tip">不上传将默认使用第一件下裙的图片</view>
+      <view class="form-tip">不上传将默认使用第一件上衣或下裙的图片</view>
     </view>
   </view>
 
@@ -57,7 +61,7 @@
   <!-- 配饰区 -->
   <view class="category-section">
     <view class="category-header">
-      <text class="title">配饰 (选填)</text>
+      <text class="title">配饰</text>
       <button class="add-btn" size="mini" bindtap="openSelector" data-category="配饰">+ 添加</button>
     </view>
     <view class="clothes-container">
@@ -105,6 +109,7 @@
       bindtap="toggleClothSelection"
       data-id="{{item._id}}"
     >
+      <image src="{{item.imageUrl}}" class="selector-image" mode="aspectFill"></image>
       <text>{{item.name}}</text>
       <view class="checkbox {{item.selected ? 'checked' : ''}}"></view>
     </view>

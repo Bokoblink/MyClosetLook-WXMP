@@ -154,6 +154,14 @@
   }
 }
 
+/* 底部提示样式 */
+.bottom-tips {
+  padding: 20rpx;
+  text-align: center;
+  color: #999;
+  font-size: 24rpx;
+}
+
 /* 衣物列表 */
 .clothes-grid {
   display: grid;

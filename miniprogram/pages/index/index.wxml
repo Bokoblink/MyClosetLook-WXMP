@@ -19,11 +19,17 @@
         <view class="outfit-name">{{item.name}}</view>
       </view>
     </block>
-    
-    <!-- 空状态提示 -->
-    <view wx:if="{{outfits.length === 0}}" class="empty-tip">
-      <text>暂无穿搭，点击右下角按钮添加</text>
-    </view>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="bottom-tips">
+    <view class="loading-tip" wx:if="{{isLoading}}">正在加载...</view>
+    <view class="nomore-tip" wx:if="{{!hasMore && outfits.length > 0}}">--- 我是有底线的 ---</view>
+  </view>
+
+  <!-- 空状态提示 -->
+  <view wx:if="{{outfits.length === 0 && !isLoading}}" class="empty-tip">
+    <text>暂无穿搭，点击右下角按钮添加</text>
   </view>
 
   <!-- 悬浮按钮 -->

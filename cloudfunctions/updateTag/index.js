@@ -40,6 +40,9 @@ exports.main = async (event, context) => {
       case 'UPDATE_FIELD': // 用于更新单个字段，例如修改placeholder
         updateData = payload; // payload此时是 { 'fields.0.placeholder': 'new value' }
         break;
+      case 'OVERWRITE_OPTIONS': // 新增：用于排序后，直接覆盖整个options数组
+        updateData = { options: payload };
+        break;
       default:
         return { success: false, message: '无效的操作' };
     }

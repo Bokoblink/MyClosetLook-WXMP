@@ -35,8 +35,14 @@
   </navigator>
 </view>
 
+<!-- 底部提示 -->
+<view class="bottom-tips">
+  <view class="loading-tip" wx:if="{{isLoading}}">正在加载...</view>
+  <view class="nomore-tip" wx:if="{{!hasMore && clothesList.length > 0}}">--- 我是有底线的 ---</view>
+</view>
+
 <!-- 空状态 -->
-<view class="empty-state" wx:else>
+<view class="empty-state" wx:if="{{clothesList.length === 0 && !isLoading}}">
   <text>这个分类下还没有衣物哦，快去添加一件吧！</text>
 </view>
 
@@ -48,7 +54,7 @@
     <view class="popup-options-container">
       <block wx:for="{{filterOptions[currentFilterType]}}" wx:key="*this">
         <view 
-          class="popup-option {{selectedFilters[currentFilterType].includes(item) ? 'selected' : ''}}"
+          class="popup-option {{selectedFilters[currentFilterType] && selectedFilters[currentFilterType].includes(item) ? 'selected' : ''}}"
           data-value="{{item}}"
           bindtap="toggleFilterOption"
         >

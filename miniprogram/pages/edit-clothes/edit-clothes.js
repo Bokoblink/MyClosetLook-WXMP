@@ -5,24 +5,24 @@ Page({
     // --- Static Data ---
     categories: ["上衣", "下裙", "配饰"],
     seasons: ["夏", "春秋", "冬"],
-    sleeveTypes: ["弓袋袖", "飞机袖", "半袖", "比甲", "吊带"],
-    collarTypes: ['方领', '圆领', '直领', '交领'],
-    skirtTypes: ['马面', '百迭', '旋裙', '破裙', '其他'],
-    accessoryTypes: ['发簪', '禁步', '璎珞', '手链', '耳饰', '胸针'],
+
+    // --- Dynamic Data from DB ---
+    allTags: [],
 
     // --- Form Data ---
-    _id: null, // 文档ID
-    image: "", // 图片路径，可以是云端fileID或本地临时路径
-    originalImageUrl: "", // 原始图片路径，用于判断是否更换了图片
+    _id: null,
+    imageUrl: "",
+    originalImageUrl: "",
     name: "",
     category: "",
     season: "",
     remark: "",
-    sleeveType: "",
-    collarType: "",
-    skirtType: "",
-    accessoryType: "",
-    sizes: {}
+    attributes: {}, // 用于存储所有动态属性的键值对
+    sizes: {},
+
+    // --- Dynamic Picker & Input Options ---
+    currentAttributePickers: [],
+    currentSizeFields: []
   },
 
   onLoad(options) {
@@ -34,72 +34,74 @@ Page({
     }
   },
 
-  // 加载衣物数据并填充表单
-  loadClotheData(id) {
+  async loadClotheData(id) {
     wx.showLoading({ title: '加载中...' });
-    db.collection('clothes').doc(id).get().then(res => {
-      const clothe = res.data;
+    try {
+      const clotheRes = await db.collection('clothes').doc(id).get();
+      const clothe = clotheRes.data;
+
+      const tagsRes = await db.collection('tags').get();
+      const allTags = tagsRes.data;
+
+      // 将衣物数据中的动态属性字段提取到 attributes 对象中
+      const attributes = {};
+      const attributeTags = allTags.filter(t => t.type === 'attribute');
+      attributeTags.forEach(tag => {
+        if (clothe[tag.field]) {
+          attributes[tag.field] = clothe[tag.field];
+        }
+      });
+
       this.setData({
         _id: clothe._id,
         name: clothe.name,
-        image: clothe.imageUrl, // 预览图设置为云存储地址
-        originalImageUrl: clothe.imageUrl, // 保存原始图片地址
+        imageUrl: clothe.imageUrl,
+        originalImageUrl: clothe.imageUrl,
         category: clothe.category,
         season: clothe.season,
         remark: clothe.remark,
-        sleeveType: clothe.sleeveType || "",
-        collarType: clothe.collarType || "",
-        skirtType: clothe.skirtType || "",
-        accessoryType: clothe.accessoryType || "",
-        sizes: clothe.sizes || {}
+        sizes: clothe.sizes || {},
+        attributes: attributes, // 设置新的attributes对象
+        allTags: allTags
+      }, () => {
+        this.updateDynamicFields();
       });
+
       wx.hideLoading();
-    }).catch(err => {
+    } catch (err) {
       wx.hideLoading();
       wx.showToast({ title: '加载失败', icon: 'none' });
       console.error(err);
-    });
+    }
   },
 
-  // --- Event Handlers (与add页面相同) ---
+  updateDynamicFields() {
+    const { category, allTags } = this.data;
+    if (!category) return;
+    const attributePickers = allTags.filter(tag => tag.type === 'attribute' && tag.category.includes(category) && tag.field !== 'season');
+    const sizeTag = allTags.find(tag => tag.type === 'size' && tag.category.includes(category));
+    const sizeFields = sizeTag ? sizeTag.fields : [];
+    this.setData({ currentAttributePickers: attributePickers, currentSizeFields: sizeFields });
+  },
+
+  // --- Event Handlers ---
   chooseImage() {
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['compressed'],
-      sourceType: ['album', 'camera'],
-      success: (res) => {
-        this.setData({ image: res.tempFilePaths[0] });
-      }
-    });
+    wx.chooseImage({ count: 1, sizeType: ['compressed'], success: (res) => { this.setData({ imageUrl: res.tempFilePaths[0] }); } });
   },
 
-  onInput(e) {
-    const { key } = e.currentTarget.dataset;
-    this.setData({ [key]: e.detail.value });
-  },
+  onInput(e) { this.setData({ [e.currentTarget.dataset.key]: e.detail.value }); },
 
   onCategoryChange(e) {
-    this.setData({ category: this.data.categories[e.detail.value] });
+    const newCategory = this.data.categories[e.detail.value];
+    this.setData({ category: newCategory, attributes: {}, sizes: {} }, () => { this.updateDynamicFields(); });
   },
 
-  onSeasonChange(e) {
-    this.setData({ season: this.data.seasons[e.detail.value] });
-  },
+  onSeasonChange(e) { this.setData({ season: this.data.seasons[e.detail.value] }); },
 
-  onSleeveChange(e) {
-    this.setData({ sleeveType: this.data.sleeveTypes[e.detail.value] });
-  },
-
-  onCollarChange(e) {
-    this.setData({ collarType: this.data.collarTypes[e.detail.value] });
-  },
-
-  onSkirtTypeChange(e) {
-    this.setData({ skirtType: this.data.skirtTypes[e.detail.value] });
-  },
-
-  onAccessoryTypeChange(e) {
-    this.setData({ accessoryType: this.data.accessoryTypes[e.detail.value] });
+  onAttributeChange(e) {
+    const { field, options } = e.currentTarget.dataset;
+    const selectedOption = options[e.detail.value];
+    this.setData({ [`attributes.${field}`]: selectedOption });
   },
 
   onSizeInput(e) {
@@ -107,63 +109,51 @@ Page({
     this.setData({ [`sizes.${key}`]: e.detail.value });
   },
 
-  // --- Core Logic ---
+  clearPicker(e) {
+    const { key, field } = e.currentTarget.dataset;
+    if (key === 'category') {
+      this.setData({ category: "", currentAttributePickers: [], currentSizeFields: [] });
+    } else if (key === 'season') {
+      this.setData({ season: "" });
+    } else {
+      this.setData({ [`attributes.${field}`]: "" });
+    }
+  },
 
-  // 保存更新
+  // --- Core Logic ---
   async updateClothe() {
     if (!this.data.name || !this.data.category) {
       wx.showToast({ title: "名称和分类为必填项", icon: "none" });
       return;
     }
-
     wx.showLoading({ title: '正在保存...' });
 
     let newImageUrl = this.data.originalImageUrl;
 
     try {
-      // 1. 检查图片是否被修改
-      if (this.data.image !== this.data.originalImageUrl) {
-        // 上传新图片
-        const cloudPath = `clothes/${Date.now()}-${Math.floor(Math.random() * 1000)}.png`;
-        const uploadResult = await wx.cloud.uploadFile({
-          cloudPath,
-          filePath: this.data.image,
-        });
+      if (this.data.imageUrl !== this.data.originalImageUrl) {
+        const uploadResult = await wx.cloud.uploadFile({ cloudPath: `clothes/${Date.now()}.png`, filePath: this.data.imageUrl });
         newImageUrl = uploadResult.fileID;
-
-        // 删除旧图片
         if (this.data.originalImageUrl) {
           wx.cloud.deleteFile({ fileList: [this.data.originalImageUrl] });
         }
       }
 
-      // 2. 准备更新数据
       const dataToUpdate = {
         name: this.data.name,
         category: this.data.category,
         season: this.data.season,
         remark: this.data.remark,
         imageUrl: newImageUrl,
-        sleeveType: this.data.sleeveType,
-        collarType: this.data.collarType,
-        skirtType: this.data.skirtType,
-        accessoryType: this.data.accessoryType,
-        sizes: this.data.sizes
+        sizes: this.data.sizes,
+        ...this.data.attributes
       };
 
-      // 3. 更新数据库
-      await db.collection('clothes').doc(this.data._id).update({
-        data: dataToUpdate
-      });
+      await db.collection('clothes').doc(this.data._id).update({ data: dataToUpdate });
 
       wx.hideLoading();
       wx.showToast({ title: "更新成功" });
-
-      // 4. 返回上一页
-      setTimeout(() => {
-        wx.navigateBack();
-      }, 1500);
-
+      setTimeout(() => { wx.navigateBack(); }, 1500);
     } catch (err) {
       wx.hideLoading();
       wx.showToast({ title: '更新失败', icon: 'none' });

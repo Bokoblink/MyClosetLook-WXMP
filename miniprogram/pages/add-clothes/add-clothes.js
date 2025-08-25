@@ -2,86 +2,53 @@ const db = wx.cloud.database();
 
 Page({
   data: {
-    // --- Static Data (from DB) ---
+    // --- Static Data ---
     categories: ["上衣", "下裙", "配饰"],
     seasons: ["夏", "春秋", "冬"],
-    attributeTags: [], // 从tags集合加载的衣物属性标签
-    sizeTags: [],      // 从tags集合加载的尺寸标签
+    
+    // --- Dynamic Data from DB ---
+    allTags: [],
 
     // --- Form Data ---
-    image: "",
+    imageUrl: "",
     name: "",
     category: "",
     season: "",
     remark: "",
+    attributes: {}, // 用于存储所有动态属性的键值对，如 { sleeveType: '飞机袖' }
+    sizes: {}, // 存储所有尺寸信息 { '衣长': '70' }
 
-    // Category specific fields (values selected by user)
-    sleeveType: "",
-    collarType: "",
-    skirtType: "",
-    accessoryType: "",
-    sizes: {}, // 存储所有尺寸信息
-
-    // --- Dynamic Picker Options ---
-    currentSleeveTypes: [],
-    currentCollarTypes: [],
-    currentSkirtTypes: [],
-    currentAccessoryTypes: [],
-    currentSizeLabels: [] // 当前分类下的尺寸标签
+    // --- Dynamic Picker & Input Options ---
+    currentAttributePickers: [], 
+    currentSizeFields: []      
   },
 
   onLoad() {
-    this.loadTagsAndInitialize();
+    this.loadTags();
   },
 
-  // 加载标签数据并初始化页面
-  async loadTagsAndInitialize() {
-    wx.showLoading({ title: '加载标签...' });
+  async loadTags() {
+    wx.showLoading({ title: '加载中...' });
     try {
       const res = await db.collection('tags').get();
-      const tags = res.data;
-      const attributeTags = tags.filter(t => t.type === '衣物属性');
-      const sizeTags = tags.filter(t => t.type === '尺寸标签');
-
-      this.setData({
-        attributeTags,
-        sizeTags
-      }, () => {
-        // 确保标签加载后再初始化尺寸标签
-        this.updateSizeLabels();
-        // 确保标签加载后再初始化分类相关的picker选项
-        this.updateCategoryPickers();
-      });
+      this.setData({ allTags: res.data });
       wx.hideLoading();
     } catch (err) {
       wx.hideLoading();
-      wx.showToast({ title: '加载标签失败', icon: 'none' });
-      console.error('加载标签失败', err);
+      wx.showToast({ title: '标签加载失败', icon: 'none' });
     }
   },
 
-  // 根据当前分类更新尺寸标签和picker选项
-  updateSizeLabels() {
-    const { category, sizeTags } = this.data;
-    const currentSizeLabels = sizeTags.filter(t => 
-      t.category && (t.category.includes(category) || t.category === '通用')
-    );
-    this.setData({ currentSizeLabels });
-  },
-
-  updateCategoryPickers() {
-    const { category, attributeTags } = this.data;
-    const getOptions = (fieldName) => {
-      const tag = attributeTags.find(t => t.fieldName === fieldName);
-      return tag ? tag.options : [];
-    };
-
-    this.setData({
-      currentSleeveTypes: getOptions('sleeveType'),
-      currentCollarTypes: getOptions('collarType'),
-      currentSkirtTypes: getOptions('skirtType'),
-      currentAccessoryTypes: getOptions('accessoryType'),
-    });
+  updateDynamicFields() {
+    const { category, allTags } = this.data;
+    if (!category) {
+      this.setData({ currentAttributePickers: [], currentSizeFields: [] });
+      return;
+    }
+    const attributePickers = allTags.filter(tag => tag.type === 'attribute' && tag.category.includes(category) && tag.field !== 'season');
+    const sizeTag = allTags.find(tag => tag.type === 'size' && tag.category.includes(category));
+    const sizeFields = sizeTag ? sizeTag.fields : [];
+    this.setData({ currentAttributePickers: attributePickers, currentSizeFields: sizeFields });
   },
 
   // --- Event Handlers ---
@@ -91,46 +58,51 @@ Page({
     const newCategory = this.data.categories[e.detail.value];
     this.setData({
       category: newCategory,
-      // 重置所有分类专属字段
-      sleeveType: "",
-      collarType: "",
-      skirtType: "",
-      accessoryType: "",
+      attributes: {}, // 重置所有分类专属属性
       sizes: {}
     }, () => {
-      this.updateSizeLabels();
-      this.updateCategoryPickers();
+      this.updateDynamicFields();
     });
   },
 
   onSeasonChange(e) { this.setData({ season: this.data.seasons[e.detail.value] }); },
 
-  onSleeveChange(e) { this.setData({ sleeveType: this.data.currentSleeveTypes[e.detail.value] }); },
-  onCollarChange(e) { this.setData({ collarType: this.data.currentCollarTypes[e.detail.value] }); },
-  onSkirtTypeChange(e) { this.setData({ skirtType: this.data.currentSkirtTypes[e.detail.value] }); },
-  onAccessoryTypeChange(e) { this.setData({ accessoryType: this.data.currentAccessoryTypes[e.detail.value] }); },
+  onAttributeChange(e) {
+    const { field, options } = e.currentTarget.dataset;
+    const selectedOption = options[e.detail.value];
+    this.setData({ [`attributes.${field}`]: selectedOption });
+  },
 
   onSizeInput(e) {
     const { key } = e.currentTarget.dataset;
     this.setData({ [`sizes.${key}`]: e.detail.value });
   },
 
-  clearPicker(e) { this.setData({ [e.currentTarget.dataset.key]: "" }); },
+  clearPicker(e) { 
+    const { key, field } = e.currentTarget.dataset;
+    if (key === 'category') {
+        this.setData({ category: "", currentAttributePickers: [], currentSizeFields: [] });
+    } else if (key === 'season') {
+        this.setData({ season: "" });
+    } else {
+        this.setData({ [`attributes.${field}`]: "" });
+    }
+  },
 
   chooseImage() {
-    wx.chooseImage({ count: 1, sizeType: ['compressed'], sourceType: ['album', 'camera'], success: (res) => { this.setData({ image: res.tempFilePaths[0] }); } });
+    wx.chooseImage({ count: 1, sizeType: ['compressed'], sourceType: ['album', 'camera'], success: (res) => { this.setData({ imageUrl: res.tempFilePaths[0] }); } });
   },
 
   // --- Core Logic ---
   async saveClothe() {
-    if (!this.data.image || !this.data.name || !this.data.category) {
+    if (!this.data.imageUrl || !this.data.name || !this.data.category) {
       wx.showToast({ title: "图片、名称和分类为必填项", icon: "none" });
       return;
     }
     wx.showLoading({ title: '正在保存...' });
     try {
       const cloudPath = `clothes/${Date.now()}-${Math.floor(Math.random() * 1000)}.png`;
-      const uploadResult = await wx.cloud.uploadFile({ cloudPath, filePath: this.data.image });
+      const uploadResult = await wx.cloud.uploadFile({ cloudPath, filePath: this.data.imageUrl });
 
       const dataToSave = {
         name: this.data.name,
@@ -138,22 +110,10 @@ Page({
         season: this.data.season,
         remark: this.data.remark,
         imageUrl: uploadResult.fileID,
-        createdAt: db.serverDate()
+        createdAt: db.serverDate(),
+        sizes: this.data.sizes,
+        ...this.data.attributes // 将所有动态属性展开存入
       };
-
-      // 动态添加分类专属字段
-      const attributeTagFields = this.data.attributeTags.map(t => t.fieldName);
-      attributeTagFields.forEach(field => {
-        if (this.data[field]) dataToSave[field] = this.data[field];
-      });
-
-      // 动态添加尺寸字段
-      const sizeFieldNames = this.data.currentSizeLabels.map(t => t.name); // 使用name作为key
-      const sizesToSave = {};
-      sizeFieldNames.forEach(fieldName => {
-        if (this.data.sizes[fieldName]) sizesToSave[fieldName] = this.data.sizes[fieldName];
-      });
-      dataToSave.sizes = sizesToSave;
 
       await db.collection('clothes').add({ data: dataToSave });
       wx.hideLoading();

@@ -9,15 +9,30 @@
       <view class="tag-card">
         <view class="card-header">
           <text class="title">{{tag.name}}</text>
-          <button class="add-btn" size="mini" bindtap="showAddModal" data-tag-id="{{tag._id}}" data-type="{{tag.type}}">+ 添加</button>
+          <view class="header-actions">
+            <!-- 排序按钮，仅对属性标签显示 -->
+            <button wx:if="{{tag.type === 'attribute'}}" class="sort-btn" size="mini" bindtap="toggleSortMode" data-tag-id="{{tag._id}}">
+              {{tag.isSorting ? '完成' : '排序'}}
+            </button>
+            <button class="add-btn" size="mini" bindtap="showAddModal" data-tag-id="{{tag._id}}" data-type="{{tag.type}}">+ 添加</button>
+          </view>
         </view>
 
         <!-- 属性标签列表 -->
         <view class="tag-list" wx:if="{{tag.type === 'attribute'}}">
-          <block wx:for="{{tag.options}}" wx:for-item="option" wx:key="*this">
+          <block wx:for="{{tag.options}}" wx:for-item="option" wx:for-index="idx" wx:key="*this">
             <view class="tag-item">
               <text>{{option}}</text>
-              <view class="delete-btn" bindtap="handleDeleteOption" data-tag-id="{{tag._id}}" data-option="{{option}}">×</view>
+              <!-- 根据是否在排序模式，显示不同按钮 -->
+              <view class="actions">
+                <block wx:if="{{tag.isSorting}}">
+                  <view class="sort-arrow" bindtap="moveOption" data-tag-id="{{tag._id}}" data-index="{{idx}}" data-direction="-1">↑</view>
+                  <view class="sort-arrow" bindtap="moveOption" data-tag-id="{{tag._id}}" data-index="{{idx}}" data-direction="1">↓</view>
+                </block>
+                <block wx:else>
+                  <view class="delete-btn" bindtap="handleDeleteOption" data-tag-id="{{tag._id}}" data-option="{{option}}">×</view>
+                </block>
+              </view>
             </view>
           </block>
         </view>
@@ -48,18 +63,15 @@
   <view class="modal-dialog">
     <view class="modal-title">{{modalTitle}}</view>
     
-    <!-- 新增属性 -->
     <block wx:if="{{modalType === 'attribute'}}">
       <input class="modal-input" placeholder="请输入新选项名称" value="{{inputValue}}" bindinput="onModalInput" />
     </block>
 
-    <!-- 新增尺寸字段 -->
     <block wx:if="{{modalType === 'size' && !isEditMode}}">
       <input class="modal-input" placeholder="请输入字段名称 (如: 肩宽)" value="{{newField.key}}" bindinput="onModalInput" data-key="key"/>
       <input class="modal-input" placeholder="请输入提示词 (如: 70cm)" value="{{newField.placeholder}}" bindinput="onModalInput" data-key="placeholder"/>
     </block>
 
-    <!-- 编辑尺寸字段提示词 -->
     <block wx:if="{{modalType === 'size' && isEditMode}}">
       <view class="modal-subtitle">请输入提示词</view>
       <input class="modal-input" placeholder="请输入提示词 (如: 70cm)" value="{{newField.placeholder}}" bindinput="onModalInput" data-key="placeholder"/>

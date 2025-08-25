@@ -31,20 +31,30 @@
   margin-bottom: 20rpx;
 }
 
-/* 1. 标题加粗 (参考add-outfit.wxss) */
 .title {
   font-size: 32rpx;
   font-weight: bold;
 }
 
-/* 1. 添加按钮样式 (参考add-outfit.wxss) */
-.add-btn {
-  background-color: #07c160;
+.header-actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.add-btn, .sort-btn {
   color: white;
-  /* 移除了button的默认边框和边距 */
   margin: 0;
   padding: 0 24rpx;
   line-height: 2.3;
+  font-size: 28rpx;
+}
+
+.add-btn {
+  background-color: #07c160;
+}
+
+.sort-btn {
+  background-color: #ff9f43;
 }
 
 .tag-list {
@@ -53,13 +63,16 @@
   gap: 20rpx;
 }
 
-.tag-item, .field-item {
+.tag-item {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* 让内容和按钮分开 */
   background-color: #f0f0f0;
   padding: 10rpx 15rpx;
   border-radius: 8rpx;
   font-size: 28rpx;
+  /* 为排序按钮留出空间 */
+  min-width: 150rpx; 
 }
 
 .field-item {
@@ -89,10 +102,10 @@
 
 .actions {
   display: flex;
-  gap: 20rpx;
+  gap: 10rpx; /* 增加箭头间距 */
+  margin-left: 20rpx; /* 与文字的间距 */
 }
 
-/* 3 & 4. 编辑和删除按钮新样式 */
 .edit-btn,
 .delete-btn {
   font-size: 36rpx;
@@ -100,9 +113,10 @@
   padding: 0 10rpx;
 }
 
-.edit-btn:hover,
-.delete-btn:hover {
-  color: #333;
+.sort-arrow {
+  font-size: 36rpx;
+  color: #666;
+  padding: 0 5rpx;
 }
 
 /* 弹窗样式 */
@@ -135,7 +149,6 @@
   margin-bottom: 30rpx;
 }
 
-/* 5. 弹窗副标题样式 */
 .modal-subtitle {
   font-size: 28rpx;
   color: #666;

@@ -7,15 +7,13 @@ Page({
     season: "",
     seasons: ["夏", "春秋", "冬"],
 
-    // --- 静态类型数据 ---
-    sleeveTypes: ["弓袋袖", "飞机袖", "半袖", "比甲", "吊带"],
-    skirtTypes: ['马面', '百迭', '旋裙', '破裙', '其他'],
-    accessoryTypes: ['发簪', '禁步', '璎珞', '手链', '耳饰', '胸针'],
-
     // --- 已选中的衣物 ---
     selectedTops: [],
     selectedSkirts: [],
     selectedAccessories: [],
+
+    // --- 动态标签数据 ---
+    allTags: [],
 
     // --- 选择弹窗相关 ---
     isSelectorShow: false,
@@ -27,23 +25,29 @@ Page({
     currentFilter: '全部'
   },
 
-  // --- 主页面逻辑 ---
-  onInput(e) { this.setData({ name: e.detail.value }); },
-    onSeasonChange(e) { // ★ 新增季节选择事件处理
-    this.setData({ season: this.data.seasons[e.detail.value] });
+  onLoad() {
+    this.loadTags();
   },
 
-  clearPicker(e) {
-    const { key } = e.currentTarget.dataset;
-    this.setData({ [key]: "" });
+  async loadTags() {
+    try {
+      const res = await db.collection('tags').get();
+      this.setData({ allTags: res.data });
+    } catch (e) {
+      console.error('加载标签失败', e);
+      wx.showToast({ title: '标签加载失败', icon: 'none' });
+    }
   },
+
+  // --- 主页面逻辑 ---
+  onInput(e) { this.setData({ name: e.detail.value }); },
+  onSeasonChange(e) { this.setData({ season: this.data.seasons[e.detail.value] }); },
+  clearPicker(e) { this.setData({ [e.currentTarget.dataset.key]: "" }); },
+
   chooseOutfitImage() {
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['compressed'],
-      success: (res) => { this.setData({ outfitImage: res.tempFilePaths[0] }); }
-    });
+    wx.chooseImage({ count: 1, sizeType: ['compressed'], success: (res) => { this.setData({ outfitImage: res.tempFilePaths[0] }); } });
   },
+
   removeSelectedItem(e) {
     const { id, category } = e.currentTarget.dataset;
     const keyMap = { '上衣': 'selectedTops', '下裙': 'selectedSkirts', '配饰': 'selectedAccessories' };
@@ -54,10 +58,19 @@ Page({
   // --- 弹窗相关逻辑 ---
   openSelector(e) {
     const { category } = e.currentTarget.dataset;
-    let filterOptions = ['全部'];
-    if (category === '上衣') filterOptions.push(...this.data.sleeveTypes);
-    if (category === '下裙') filterOptions.push(...this.data.skirtTypes);
-    if (category === '配饰') filterOptions.push(...this.data.accessoryTypes);
+    const { allTags } = this.data;
+    
+    // 定义每个分类在弹窗中主要使用哪个字段来筛选
+    const filterFieldMap = {
+      '上衣': 'sleeveType',
+      '下裙': 'skirtType',
+      '配饰': 'accessoryType'
+    };
+
+    const mainFilterField = filterFieldMap[category];
+    const tagData = allTags.find(t => t.field === mainFilterField);
+    
+    const filterOptions = tagData ? ['全部', ...tagData.options] : ['全部'];
 
     this.setData({ 
       currentCategory: category,
@@ -70,20 +83,25 @@ Page({
 
   onFilterTap(e) {
     const { filter } = e.currentTarget.dataset;
-    this.setData({ currentFilter: filter }, () => {
-      this.loadSelectableClothes();
-    });
+    this.setData({ currentFilter: filter }, () => { this.loadSelectableClothes(); });
   },
 
   loadSelectableClothes() {
     this.setData({ loadingClothes: true, selectableClothes: [] });
-    const { currentCategory, currentFilter } = this.data;
+    const { currentCategory, currentFilter, allTags } = this.data;
     
     let query = db.collection('clothes').where({ category: currentCategory });
 
     if (currentFilter !== '全部') {
-      const filterKeyMap = { '上衣': 'sleeveType', '下裙': 'skirtType', '配饰': 'accessoryType' };
-      query = query.where({ [filterKeyMap[currentCategory]]: currentFilter });
+      const filterFieldMap = {
+        '上衣': 'sleeveType',
+        '下裙': 'skirtType',
+        '配饰': 'accessoryType'
+      };
+      const filterKey = filterFieldMap[currentCategory];
+      if(filterKey) {
+        query = query.where({ [filterKey]: currentFilter });
+      }
     }
 
     query.get().then(res => {
@@ -113,8 +131,9 @@ Page({
   closeSelector() {
     const { currentCategory, tempSelectedIds, selectableClothes } = this.data;
     const keyMap = { '上衣': 'selectedTops', '下裙': 'selectedSkirts', '配饰': 'selectedAccessories' };
-    const finalSelection = [...selectableClothes].filter(item => tempSelectedIds.has(item._id));
-    this.setData({ [keyMap[currentCategory]]: finalSelection, isSelectorShow: false });
+    const allAvailableClothes = this.data[keyMap[currentCategory]].filter(item => !selectableClothes.some(s => s._id === item._id));
+    const newSelection = [...selectableClothes].filter(item => tempSelectedIds.has(item._id));
+    this.setData({ [keyMap[currentCategory]]: [...allAvailableClothes, ...newSelection], isSelectorShow: false });
   },
 
   // --- 保存逻辑 ---
@@ -127,12 +146,11 @@ Page({
     try {
       let outfitImageUrl = "";
       if (this.data.outfitImage) {
-        const uploadResult = await wx.cloud.uploadFile({
-          cloudPath: `outfits/${Date.now()}.png`,
-          filePath: this.data.outfitImage
-        });
+        const uploadResult = await wx.cloud.uploadFile({ cloudPath: `outfits/${Date.now()}.png`, filePath: this.data.outfitImage });
         outfitImageUrl = uploadResult.fileID;
-      } else if (this.data.selectedSkirts.length > 0) {
+      } else if (this.data.selectedTops.length > 0) { // 优先用上衣
+        outfitImageUrl = this.data.selectedTops[0].imageUrl;
+      } else if (this.data.selectedSkirts.length > 0) { // 其次用下裙
         outfitImageUrl = this.data.selectedSkirts[0].imageUrl;
       }
 
@@ -142,15 +160,7 @@ Page({
         ...this.data.selectedAccessories.map(i => i._id)
       ];
 
-      await db.collection('outfits').add({
-        data: {
-          name: this.data.name,
-          outfitImageUrl: outfitImageUrl,
-          clothes: clothesIds,
-          season: this.data.season,
-          createdAt: db.serverDate()
-        }
-      });
+      await db.collection('outfits').add({ data: { name: this.data.name, outfitImageUrl: outfitImageUrl, clothes: clothesIds, season: this.data.season, createdAt: db.serverDate() } });
 
       wx.hideLoading();
       wx.showToast({ title: '保存成功' });

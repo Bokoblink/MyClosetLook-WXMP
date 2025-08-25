@@ -8,7 +8,14 @@ const db = cloud.database();
 
 // 定义所有需要初始化的标签数据
 const tagsData = [
-  // --- 属性 ---
+  {
+    _id: 'season_definition', // 加回季节
+    name: '季节',
+    field: 'season',
+    category: ['上衣', '下裙', '配饰'],
+    type: 'attribute',
+    options: ['夏', '春秋', '冬']
+  },
   {
     _id: 'sleeveType_definition',
     name: '袖型',
@@ -27,7 +34,7 @@ const tagsData = [
   },
   {
     _id: 'skirtType_definition',
-    name: '下裙类型', // 修正标题
+    name: '下裙类型',
     field: 'skirtType',
     category: ['下裙'],
     type: 'attribute',
@@ -35,13 +42,12 @@ const tagsData = [
   },
   {
     _id: 'accessoryType_definition',
-    name: '配饰类型', // 修正标题
+    name: '配饰类型',
     field: 'accessoryType',
     category: ['配饰'],
     type: 'attribute',
     options: ['发簪', '禁步', '璎珞', '手链', '耳饰', '胸针']
   },
-  // --- 尺寸 ---
   {
     _id: 'top_size_definition',
     name: '上衣尺寸',
@@ -76,40 +82,24 @@ const tagsData = [
 // 云函数入口函数
 exports.main = async (event, context) => {
   const tagsCollection = db.collection('tags');
-
   try {
     let totalAdded = 0;
     let totalUpdated = 0;
-
-    // 1. 移除 season_definition (如果存在)
-    try {
-      await tagsCollection.doc('season_definition').remove();
-    } catch(e) {
-      // 如果文档不存在会报错，忽略即可
-      console.log('season_definition not found or already deleted.');
-    }
-
     const promises = tagsData.map(async (tag) => {
       const docId = tag._id;
       const dataToWrite = { ...tag };
       delete dataToWrite._id;
-
-      const result = await tagsCollection.doc(docId).set({
-        data: dataToWrite
-      });
-      
+      const result = await tagsCollection.doc(docId).set({ data: dataToWrite });
       if (result.stats.created > 0) {
         totalAdded++;
       } else if (result.stats.updated > 0) {
         totalUpdated++;
       }
     });
-
     await Promise.all(promises);
-
     return {
       success: true,
-      message: `初始化完成。新增 ${totalAdded} 个，更新 ${totalUpdated} 个标签定义。季节标签已移除。`,
+      message: `初始化完成。新增 ${totalAdded} 个，更新 ${totalUpdated} 个标签定义。`,
     };
   } catch (e) {
     console.error(e);

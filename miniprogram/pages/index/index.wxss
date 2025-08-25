@@ -65,3 +65,11 @@
   width: 200rpx;
   margin-bottom: 30rpx;
 }
+
+/* 底部提示样式 */
+.bottom-tips {
+  padding: 20rpx;
+  text-align: center;
+  color: #999;
+  font-size: 24rpx;
+}
