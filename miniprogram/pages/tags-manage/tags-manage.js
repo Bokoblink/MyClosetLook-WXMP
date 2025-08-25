@@ -37,6 +37,7 @@ Page({
     };
     const grouped = Object.values(groupMap).map(groupName => ({ groupName, tags: [] }));
 
+    // 1. 先按类型分组
     tags.forEach(tag => {
       const groupName = groupMap[tag.type];
       const group = grouped.find(g => g.groupName === groupName);
@@ -44,6 +45,16 @@ Page({
         group.tags.push(tag);
       }
     });
+
+    // 2. 对“衣物属性”分组进行内部排序
+    const attributeGroup = grouped.find(g => g.groupName === '衣物属性');
+    if (attributeGroup) {
+      const attributeOrder = ['袖型', '领型', '下裙类型', '配饰类型'];
+      attributeGroup.tags.sort((a, b) => {
+        return attributeOrder.indexOf(a.name) - attributeOrder.indexOf(b.name);
+      });
+    }
+
     this.setData({ groupedTags: grouped });
   },
 
@@ -52,7 +63,6 @@ Page({
     this.setData({ showModal: false });
   },
 
-  // BUG FIX 1: 添加缺失的 onModalInput 函数
   onModalInput(e) {
     const { key } = e.currentTarget.dataset;
     if (this.data.modalType === 'attribute') {
@@ -112,7 +122,6 @@ Page({
   },
 
   async addSizeField(tagId, field) {
-    // BUG FIX 4: 提示词改为非必填
     if (!field.key) return wx.showToast({ title: '字段名不能为空', icon: 'none' });
     const tag = this.findTagById(tagId);
     if (tag.fields.some(f => f.key === field.key)) return wx.showToast({ title: '字段名已存在', icon: 'none' });

@@ -5,19 +5,10 @@ cloud.init({
 });
 
 const db = cloud.database();
-const _ = db.command;
 
 // 定义所有需要初始化的标签数据
 const tagsData = [
   // --- 属性 ---
-  {
-    _id: 'season_definition',
-    name: '季节',
-    field: 'season',
-    category: ['上衣', '下裙', '配饰'],
-    type: 'attribute',
-    options: ['夏', '春秋', '冬']
-  },
   {
     _id: 'sleeveType_definition',
     name: '袖型',
@@ -36,7 +27,7 @@ const tagsData = [
   },
   {
     _id: 'skirtType_definition',
-    name: '类型',
+    name: '下裙类型', // 修正标题
     field: 'skirtType',
     category: ['下裙'],
     type: 'attribute',
@@ -44,7 +35,7 @@ const tagsData = [
   },
   {
     _id: 'accessoryType_definition',
-    name: '类型',
+    name: '配饰类型', // 修正标题
     field: 'accessoryType',
     category: ['配饰'],
     type: 'attribute',
@@ -90,13 +81,19 @@ exports.main = async (event, context) => {
     let totalAdded = 0;
     let totalUpdated = 0;
 
+    // 1. 移除 season_definition (如果存在)
+    try {
+      await tagsCollection.doc('season_definition').remove();
+    } catch(e) {
+      // 如果文档不存在会报错，忽略即可
+      console.log('season_definition not found or already deleted.');
+    }
+
     const promises = tagsData.map(async (tag) => {
       const docId = tag._id;
-      // 关键修正：创建一个不包含 _id 的新对象用于写入
       const dataToWrite = { ...tag };
       delete dataToWrite._id;
 
-      // 使用 set 方法，如果文档存在则完全覆盖，不存在则创建
       const result = await tagsCollection.doc(docId).set({
         data: dataToWrite
       });
@@ -112,7 +109,7 @@ exports.main = async (event, context) => {
 
     return {
       success: true,
-      message: `初始化完成。新增 ${totalAdded} 个，更新 ${totalUpdated} 个标签定义。`,
+      message: `初始化完成。新增 ${totalAdded} 个，更新 ${totalUpdated} 个标签定义。季节标签已移除。`,
     };
   } catch (e) {
     console.error(e);
