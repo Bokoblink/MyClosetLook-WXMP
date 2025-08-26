@@ -9,30 +9,15 @@
       <view class="tag-card">
         <view class="card-header">
           <text class="title">{{tag.name}}</text>
-          <view class="header-actions">
-            <!-- 排序按钮，仅对属性标签显示 -->
-            <button wx:if="{{tag.type === 'attribute'}}" class="sort-btn" size="mini" bindtap="toggleSortMode" data-tag-id="{{tag._id}}">
-              {{tag.isSorting ? '完成' : '排序'}}
-            </button>
-            <button class="add-btn" size="mini" bindtap="showAddModal" data-tag-id="{{tag._id}}" data-type="{{tag.type}}">+ 添加</button>
-          </view>
+          <button class="add-btn" size="mini" bindtap="showAddModal" data-tag-id="{{tag._id}}" data-type="{{tag.type}}">+ 添加</button>
         </view>
 
         <!-- 属性标签列表 -->
         <view class="tag-list" wx:if="{{tag.type === 'attribute'}}">
-          <block wx:for="{{tag.options}}" wx:for-item="option" wx:for-index="idx" wx:key="*this">
+          <block wx:for="{{tag.options}}" wx:for-item="option" wx:key="*this">
             <view class="tag-item">
               <text>{{option}}</text>
-              <!-- 根据是否在排序模式，显示不同按钮 -->
-              <view class="actions">
-                <block wx:if="{{tag.isSorting}}">
-                  <view class="sort-arrow" bindtap="moveOption" data-tag-id="{{tag._id}}" data-index="{{idx}}" data-direction="-1">↑</view>
-                  <view class="sort-arrow" bindtap="moveOption" data-tag-id="{{tag._id}}" data-index="{{idx}}" data-direction="1">↓</view>
-                </block>
-                <block wx:else>
-                  <view class="delete-btn" bindtap="handleDeleteOption" data-tag-id="{{tag._id}}" data-option="{{option}}">×</view>
-                </block>
-              </view>
+              <view class="delete-btn" bindtap="handleDeleteOption" data-tag-id="{{tag._id}}" data-option="{{option}}">×</view>
             </view>
           </block>
         </view>

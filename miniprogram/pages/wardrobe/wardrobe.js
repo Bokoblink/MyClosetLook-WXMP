@@ -81,8 +81,11 @@ Page({
 
   updateAvailableFilters() {
     const { activeCategory, allTags } = this.data;
-    const available = allTags.filter(tag => tag.category.includes(activeCategory)).map(tag => tag.field);
-    this.setData({ availableFilters: available });
+    const categorySpecificFilters = allTags.filter(tag => tag.category.includes(activeCategory)).map(tag => tag.field);
+    // 始终包含 'season' 筛选
+    const available = ['season', ...categorySpecificFilters];
+    const uniqueAvailable = [...new Set(available)];
+    this.setData({ availableFilters: uniqueAvailable });
   },
 
   changeCategory(e) {
@@ -94,7 +97,12 @@ Page({
 
   showFilter(e) {
     const type = e.currentTarget.dataset.type;
-    this.setData({ showFilterModal: true, currentFilterType: type, currentFilterName: this.data.filterNames[type] || '' });
+    let filterName = this.data.filterNames[type] || '';
+    // 如果是下裙或配饰类型，统一显示为“类型”
+    if (type === 'skirtType' || type === 'accessoryType') {
+      filterName = '类型';
+    }
+    this.setData({ showFilterModal: true, currentFilterType: type, currentFilterName: filterName });
   },
 
   closeFilter() {

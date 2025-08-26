@@ -3,19 +3,19 @@ const db = wx.cloud.database();
 Page({
   data: {
     _id: null,
+    originalOutfitImageUrl: "",
     name: "",
     outfitImage: "",
-    originalOutfitImageUrl: "",
     season: "",
     seasons: ["夏", "春秋", "冬"],
-
-    // --- 动态标签数据 ---
-    allTags: [],
 
     // --- 已选中的衣物 ---
     selectedTops: [],
     selectedSkirts: [],
     selectedAccessories: [],
+
+    // --- 动态标签数据 ---
+    allTags: [],
 
     // --- 选择弹窗相关 ---
     isSelectorShow: false,
@@ -85,12 +85,15 @@ Page({
     }
   },
 
-  // --- Event Handlers ---
+  // --- 主页面逻辑 ---
   onInput(e) { this.setData({ name: e.detail.value }); },
   onSeasonChange(e) { this.setData({ season: this.data.seasons[e.detail.value] }); },
+  clearPicker(e) { this.setData({ [e.currentTarget.dataset.key]: "" }); },
+
   chooseOutfitImage() {
     wx.chooseImage({ count: 1, sizeType: ['compressed'], success: (res) => { this.setData({ outfitImage: res.tempFilePaths[0] }); } });
   },
+
   removeSelectedItem(e) {
     const { id, category } = e.currentTarget.dataset;
     const keyMap = { '上衣': 'selectedTops', '下裙': 'selectedSkirts', '配饰': 'selectedAccessories' };
@@ -98,34 +101,63 @@ Page({
     this.setData({ [keyMap[category]]: newSelection });
   },
 
-  // --- 弹窗相关逻辑 (与add页面一致) ---
+  // --- 弹窗相关逻辑 ---
   openSelector(e) {
     const { category } = e.currentTarget.dataset;
     const { allTags } = this.data;
-    const filterFieldMap = { '上衣': 'sleeveType', '下裙': 'skirtType', '配饰': 'accessoryType' };
+    
+    // 定义每个分类在弹窗中主要使用哪个字段来筛选
+    const filterFieldMap = {
+      '上衣': 'sleeveType',
+      '下裙': 'skirtType',
+      '配饰': 'accessoryType'
+    };
+
     const mainFilterField = filterFieldMap[category];
     const tagData = allTags.find(t => t.field === mainFilterField);
+    
     const filterOptions = tagData ? ['全部', ...tagData.options] : ['全部'];
-    this.setData({ currentCategory: category, isSelectorShow: true, currentFilter: '全部', filterOptions });
+
+    this.setData({ 
+      currentCategory: category,
+      isSelectorShow: true,
+      currentFilter: '全部',
+      filterOptions: filterOptions
+    });
     this.loadSelectableClothes();
   },
 
   onFilterTap(e) {
-    this.setData({ currentFilter: e.currentTarget.dataset.filter }, () => { this.loadSelectableClothes(); });
+    const { filter } = e.currentTarget.dataset;
+    this.setData({ currentFilter: filter }, () => { this.loadSelectableClothes(); });
   },
 
   loadSelectableClothes() {
     this.setData({ loadingClothes: true, selectableClothes: [] });
-    const { currentCategory, currentFilter } = this.data;
+    const { currentCategory, currentFilter, allTags } = this.data;
+    
     let query = db.collection('clothes').where({ category: currentCategory });
+
     if (currentFilter !== '全部') {
-      const filterKeyMap = { '上衣': 'sleeveType', '下裙': 'skirtType', '配饰': 'accessoryType' };
-      query = query.where({ [filterKeyMap[currentCategory]]: currentFilter });
+      const filterFieldMap = {
+        '上衣': 'sleeveType',
+        '下裙': 'skirtType',
+        '配饰': 'accessoryType'
+      };
+      const filterKey = filterFieldMap[currentCategory];
+      if(filterKey) {
+        query = query.where({ [filterKey]: currentFilter });
+      }
     }
+
     query.get().then(res => {
       const currentSelectedIds = this.getCurrentSelectedIds(currentCategory);
       const clothes = res.data.map(item => ({ ...item, selected: currentSelectedIds.has(item._id) }));
-      this.setData({ selectableClothes: clothes, loadingClothes: false, tempSelectedIds: new Set(currentSelectedIds) });
+      this.setData({ 
+        selectableClothes: clothes,
+        loadingClothes: false,
+        tempSelectedIds: new Set(currentSelectedIds)
+      });
     });
   },
 
@@ -145,8 +177,9 @@ Page({
   closeSelector() {
     const { currentCategory, tempSelectedIds, selectableClothes } = this.data;
     const keyMap = { '上衣': 'selectedTops', '下裙': 'selectedSkirts', '配饰': 'selectedAccessories' };
-    const finalSelection = [...selectableClothes].filter(item => tempSelectedIds.has(item._id));
-    this.setData({ [keyMap[currentCategory]]: finalSelection, isSelectorShow: false });
+    const allAvailableClothes = this.data[keyMap[currentCategory]].filter(item => !selectableClothes.some(s => s._id === item._id));
+    const newSelection = [...selectableClothes].filter(item => tempSelectedIds.has(item._id));
+    this.setData({ [keyMap[currentCategory]]: [...allAvailableClothes, ...newSelection], isSelectorShow: false });
   },
 
   // --- 保存逻辑 ---

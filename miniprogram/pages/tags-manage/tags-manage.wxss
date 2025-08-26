@@ -34,27 +34,12 @@
 .title {
   font-size: 32rpx;
   font-weight: bold;
-}
-
-.header-actions {
-  display: flex;
-  gap: 20rpx;
-}
-
-.add-btn, .sort-btn {
-  color: white;
-  margin: 0;
-  padding: 0 24rpx;
-  line-height: 2.3;
-  font-size: 28rpx;
+  flex-grow: 1;
 }
 
 .add-btn {
   background-color: #07c160;
-}
-
-.sort-btn {
-  background-color: #ff9f43;
+  color: white;
 }
 
 .tag-list {
@@ -91,7 +76,6 @@
 }
 
 .field-key {
-  font-weight: bold;
 }
 
 .field-placeholder {

@@ -291,3 +291,10 @@ textarea {
   transform: translate(-50%, -50%);
   font-size: 28rpx;
 }
+
+.selector-image {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 8rpx;
+  margin-right: 20rpx;
+}

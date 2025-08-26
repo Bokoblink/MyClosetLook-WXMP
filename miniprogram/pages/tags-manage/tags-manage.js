@@ -1,4 +1,5 @@
 const db = wx.cloud.database();
+const _ = db.command;
 
 Page({
   data: {
@@ -20,7 +21,7 @@ Page({
   async loadTags() {
     wx.showLoading({ title: '加载中...' });
     try {
-      const res = await db.collection('tags').get();
+      const res = await db.collection('tags').where({ field: _.neq('season') }).get();
       const managedTags = res.data.filter(tag => tag.field !== 'season');
       this.groupTags(managedTags);
       wx.hideLoading();
@@ -38,7 +39,6 @@ Page({
     };
     const grouped = Object.values(groupMap).map(groupName => ({ groupName, tags: [] }));
     tags.forEach(tag => {
-      tag.isSorting = false;
       const groupName = groupMap[tag.type];
       const group = grouped.find(g => g.groupName === groupName);
       if (group) group.tags.push(tag);
@@ -49,35 +49,6 @@ Page({
       attributeGroup.tags.sort((a, b) => attributeOrder.indexOf(a.name) - attributeOrder.indexOf(b.name));
     }
     this.setData({ groupedTags: grouped });
-  },
-
-  // --- Sorting Logic (Robust Version) ---
-  toggleSortMode(e) {
-    const { tagId } = e.currentTarget.dataset;
-    const newGroupedTags = JSON.parse(JSON.stringify(this.data.groupedTags));
-    const tag = this.findTagInArray(newGroupedTags, tagId);
-    if (!tag) return;
-
-    const isCurrentlySorting = tag.isSorting;
-    if (isCurrentlySorting) {
-      this.callUpdateTag(tagId, 'OVERWRITE_OPTIONS', tag.options);
-    }
-    tag.isSorting = !isCurrentlySorting;
-    this.setData({ groupedTags: newGroupedTags });
-  },
-
-  moveOption(e) {
-    const { tagId, index, direction } = e.currentTarget.dataset;
-    const newGroupedTags = JSON.parse(JSON.stringify(this.data.groupedTags));
-    const tag = this.findTagInArray(newGroupedTags, tagId);
-    if (!tag) return;
-
-    const options = tag.options;
-    const targetIndex = index + direction;
-    if (targetIndex < 0 || targetIndex >= options.length) return;
-
-    [options[index], options[targetIndex]] = [options[targetIndex], options[index]];
-    this.setData({ groupedTags: newGroupedTags });
   },
 
   // --- Modal Control ---
@@ -91,13 +62,14 @@ Page({
     }
   },
   showAddModal(e) {
-    const { tagId, type } = e.currentTarget.dataset;
-    const tag = this.findTagById(tagId);
-    this.setData({ showModal: true, isEditMode: false, modalType: type, modalTitle: `新增 - ${tag.name}`, editingTagId: tagId, inputValue: '', newField: { key: '', placeholder: '' } });
+    const { tag } = this.findTagAndIndices(e.currentTarget.dataset.tagId);
+    if (!tag) return;
+    this.setData({ showModal: true, isEditMode: false, modalType: tag.type, modalTitle: `新增 - ${tag.name}`, editingTagId: tag._id, inputValue: '', newField: { key: '', placeholder: '' } });
   },
   showEditModal(e) {
     const { tagId, fieldKey } = e.currentTarget.dataset;
-    const tag = this.findTagById(tagId);
+    const { tag } = this.findTagAndIndices(tagId);
+    if (!tag) return;
     const field = tag.fields.find(f => f.key === fieldKey);
     this.setData({ showModal: true, isEditMode: true, modalType: 'size', modalTitle: `编辑 - ${field.key}`, editingTagId: tagId, editingFieldKey: fieldKey, newField: { key: field.key, placeholder: field.placeholder } });
   },
@@ -116,18 +88,21 @@ Page({
 
   async addAttributeOption(tagId, option) {
     if (!option) return wx.showToast({ title: '选项名不能为空', icon: 'none' });
-    if (this.findTagById(tagId).options.includes(option)) return wx.showToast({ title: '选项已存在', icon: 'none' });
+    const { tag } = this.findTagAndIndices(tagId);
+    if (tag.options.includes(option)) return wx.showToast({ title: '选项已存在', icon: 'none' });
     await this.callUpdateTag(tagId, 'PUSH_OPTION', option, true);
   },
 
   async addSizeField(tagId, field) {
     if (!field.key) return wx.showToast({ title: '字段名不能为空', icon: 'none' });
-    if (this.findTagById(tagId).fields.some(f => f.key === field.key)) return wx.showToast({ title: '字段名已存在', icon: 'none' });
+    const { tag } = this.findTagAndIndices(tagId);
+    if (tag.fields.some(f => f.key === field.key)) return wx.showToast({ title: '字段名已存在', icon: 'none' });
     await this.callUpdateTag(tagId, 'PUSH_FIELD', field, true);
   },
 
   async updateSizeField(tagId, fieldKey, newPlaceholder) {
-    const fieldIndex = this.findTagById(tagId).fields.findIndex(f => f.key === fieldKey);
+    const { tag } = this.findTagAndIndices(tagId);
+    const fieldIndex = tag.fields.findIndex(f => f.key === fieldKey);
     if (fieldIndex === -1) return;
     const updatePayload = { [`fields.${fieldIndex}.placeholder`]: newPlaceholder };
     await this.callUpdateTag(tagId, 'UPDATE_FIELD', updatePayload, true);
@@ -159,12 +134,15 @@ Page({
     }
   },
 
-  findTagById(tagId) { return this.findTagInArray(this.data.groupedTags, tagId); },
-  findTagInArray(groupedTags, tagId) {
-    for (const group of groupedTags) {
-      const tag = group.tags.find(t => t._id === tagId);
-      if (tag) return tag;
+  findTagAndIndices(tagId) {
+    for (let i = 0; i < this.data.groupedTags.length; i++) {
+      const group = this.data.groupedTags[i];
+      for (let j = 0; j < group.tags.length; j++) {
+        if (group.tags[j]._id === tagId) {
+          return { groupIndex: i, tagIndex: j, tag: group.tags[j] };
+        }
+      }
     }
-    return null;
+    return { tag: null };
   }
 });
