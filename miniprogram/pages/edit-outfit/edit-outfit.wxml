@@ -9,7 +9,6 @@
     
     <view class="form-item">
       <text class="label">季节</text>
-      <!-- 修正：使用和其他页面统一的picker容器和样式 -->
       <view class="picker-container">
         <picker mode="selector" range="{{seasons}}" value="{{seasons.indexOf(season)}}" bindchange="onSeasonChange">
           <view class="picker-content {{season ? '' : 'placeholder-style'}}">{{season || '请选择季节'}}</view>
@@ -64,7 +63,7 @@
       <text class="title">配饰</text>
       <button class="add-btn" size="mini" bindtap="openSelector" data-category="配饰">+ 添加</button>
     </view>
-    <view class="clothes-container">
+    <view class_="clothes-container">
       <view class="clothe-item" wx:for="{{selectedAccessories}}" wx:key="_id">
         <image src="{{item.imageUrl}}" class="clothe-thumb" mode="aspectFill"></image>
         <view class="remove-icon" bindtap="removeSelectedItem" data-id="{{item._id}}" data-category="配饰">×</view>
@@ -101,7 +100,7 @@
     </scroll-view>
   </view>
 
-  <scroll-view scroll-y class="selector-list">
+  <scroll-view scroll-y class="selector-list" bindscrolltolower="loadMoreSelectableClothes">
     <view 
       class="selector-item {{item.selected ? 'selected' : ''}}"
       wx:for="{{selectableClothes}}" 

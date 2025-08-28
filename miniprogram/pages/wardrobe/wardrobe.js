@@ -81,11 +81,14 @@ Page({
 
   updateAvailableFilters() {
     const { activeCategory, allTags } = this.data;
-    const categorySpecificFilters = allTags.filter(tag => tag.category.includes(activeCategory)).map(tag => tag.field);
-    // 始终包含 'season' 筛选
-    const available = ['season', ...categorySpecificFilters];
-    const uniqueAvailable = [...new Set(available)];
-    this.setData({ availableFilters: uniqueAvailable });
+    // 筛选出当前分类下的专属tag，并确保tag.field有效
+    const categorySpecificFields = allTags
+      .filter(tag => tag && tag.field && tag.category && tag.category.includes(activeCategory))
+      .map(tag => tag.field);
+
+    // 确保 season 始终存在，并合并去重
+    const available = [...new Set(['season', ...categorySpecificFields])];
+    this.setData({ availableFilters: available });
   },
 
   changeCategory(e) {

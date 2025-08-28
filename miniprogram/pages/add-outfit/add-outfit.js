@@ -22,7 +22,11 @@ Page({
     loadingClothes: false,
     tempSelectedIds: new Set(),
     filterOptions: [],
-    currentFilter: '全部'
+    currentFilter: '全部',
+
+    // --- 弹窗分页 ---
+    selectorPage: 0,
+    selectorHasMore: true,
   },
 
   onLoad() {
@@ -86,9 +90,21 @@ Page({
     this.setData({ currentFilter: filter }, () => { this.loadSelectableClothes(); });
   },
 
-  loadSelectableClothes() {
-    this.setData({ loadingClothes: true, selectableClothes: [] });
-    const { currentCategory, currentFilter, allTags } = this.data;
+  loadSelectableClothes(loadMore = false) {
+    if (this.data.loadingClothes && !loadMore) return; // 防止重复加载
+
+    if (!loadMore) {
+      this.setData({ 
+        selectorPage: 0,
+        selectorHasMore: true,
+        selectableClothes: [] 
+      });
+    }
+
+    this.setData({ loadingClothes: true });
+
+    const { currentCategory, currentFilter, selectorPage } = this.data;
+    const PAGE_SIZE = 20;
     
     let query = db.collection('clothes').where({ category: currentCategory });
 
@@ -104,14 +120,29 @@ Page({
       }
     }
 
-    query.get().then(res => {
+    query.skip(selectorPage * PAGE_SIZE).limit(PAGE_SIZE).get().then(res => {
       const currentSelectedIds = this.getCurrentSelectedIds(currentCategory);
-      const clothes = res.data.map(item => ({ ...item, selected: currentSelectedIds.has(item._id) }));
+      const newClothes = res.data.map(item => ({ ...item, selected: currentSelectedIds.has(item._id) }));
+      
       this.setData({ 
-        selectableClothes: clothes,
+        selectableClothes: loadMore ? [...this.data.selectableClothes, ...newClothes] : newClothes,
         loadingClothes: false,
-        tempSelectedIds: new Set(currentSelectedIds)
+        selectorHasMore: newClothes.length === PAGE_SIZE,
+        // tempSelectedIds 每次都应从当前已选中的真实数据中同步，而不是依赖旧的temp
+        tempSelectedIds: new Set(currentSelectedIds) 
       });
+    }).catch(err => {
+      this.setData({ loadingClothes: false });
+      console.error("加载可选衣物失败", err);
+    });
+  },
+
+  loadMoreSelectableClothes() {
+    if (this.data.loadingClothes || !this.data.selectorHasMore) return;
+    this.setData({ 
+      selectorPage: this.data.selectorPage + 1 
+    }, () => {
+      this.loadSelectableClothes(true);
     });
   },
 
