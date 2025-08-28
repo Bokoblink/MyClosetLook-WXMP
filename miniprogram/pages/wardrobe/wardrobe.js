@@ -45,15 +45,26 @@ Page({
   },
 
   async loadTagsAndInitClothes() {
-    if (this.data.allTags.length > 0) {
-      // 标签已加载，则只重新加载衣物
+    if (this.data.allTags.length > 1) { // >1 because season is now hardcoded
       this.initLoad();
       return;
     }
     wx.showLoading({ title: '加载中...' });
     try {
       const res = await db.collection('tags').get();
-      const allTags = res.data;
+      let allTags = res.data;
+
+      // 手动注入 season 标签，确保它始终可用
+      const seasonTag = {
+        _id: 'season-hardcoded',
+        name: '季节',
+        field: 'season',
+        type: 'attribute',
+        options: ['夏', '春秋', '冬'],
+        category: ['上衣', '下裙', '配饰']
+      };
+      allTags.push(seasonTag);
+
       const filterOptions = {};
       const filterNames = {};
       allTags.forEach(tag => {
