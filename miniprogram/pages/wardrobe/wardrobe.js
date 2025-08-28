@@ -73,6 +73,11 @@ Page({
           filterNames[tag.field] = tag.name;
         }
       });
+
+      // 直接修改数据源，确保显示正确
+      if (filterNames.skirtType) filterNames.skirtType = '类型';
+      if (filterNames.accessoryType) filterNames.accessoryType = '类型';
+
       this.setData({ allTags, filterOptions, filterNames }, () => {
         this.initLoad();
       });
