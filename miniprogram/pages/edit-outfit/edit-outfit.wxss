@@ -248,8 +248,12 @@ textarea {
   color: white;
 }
 
-.selector-list {
+.selector-list-wrapper {
   flex: 1;
+  overflow: hidden;
+}
+
+.selector-list {
   height: 100%;
 }
 

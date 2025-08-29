@@ -25,7 +25,6 @@
   display: flex;
   flex-wrap: wrap;
   padding: 20rpx;
-  min-height: 60vh;
   align-content: flex-start; /* 核心修复：让多行内容从顶部开始排列，不要拉伸 */
 }
 

@@ -45,10 +45,6 @@ Page({
   },
 
   async loadTagsAndInitClothes() {
-    if (this.data.allTags.length > 1) { // >1 because season is now hardcoded
-      this.initLoad();
-      return;
-    }
     wx.showLoading({ title: '加载中...' });
     try {
       const res = await db.collection('tags').get();

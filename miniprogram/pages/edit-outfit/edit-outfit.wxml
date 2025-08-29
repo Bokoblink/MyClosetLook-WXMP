@@ -100,7 +100,8 @@
     </scroll-view>
   </view>
 
-  <scroll-view scroll-y class="selector-list" bindscrolltolower="loadMoreSelectableClothes">
+  <view class="selector-list-wrapper">
+    <scroll-view scroll-y class="selector-list" bindscrolltolower="loadMoreSelectableClothes">
     <view 
       class="selector-item {{item.selected ? 'selected' : ''}}"
       wx:for="{{selectableClothes}}" 
@@ -115,4 +116,5 @@
     <view class="loading-tip" wx:if="{{loadingClothes}}">加载中...</view>
     <view class="empty-tip" wx:if="{{!loadingClothes && selectableClothes.length === 0}}">这个分类下没有衣物哦</view>
   </scroll-view>
+  </view>
 </view>
