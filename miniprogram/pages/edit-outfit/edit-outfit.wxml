@@ -63,7 +63,7 @@
       <text class="title">配饰</text>
       <button class="add-btn" size="mini" bindtap="openSelector" data-category="配饰">+ 添加</button>
     </view>
-    <view class_="clothes-container">
+    <view class="clothes-container">
       <view class="clothe-item" wx:for="{{selectedAccessories}}" wx:key="_id">
         <image src="{{item.imageUrl}}" class="clothe-thumb" mode="aspectFill"></image>
         <view class="remove-icon" bindtap="removeSelectedItem" data-id="{{item._id}}" data-category="配饰">×</view>
