@@ -1,17 +1,22 @@
 /* pages/outfit-detail/outfit-detail.wxss */
 .container {
-  padding-bottom: 50rpx;
+  /* 关键：计算出滚动区域的精确高度，为底部按钮栏留出空间 */
+  height: calc(100vh - 60px - env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  padding: 20rpx;
 }
 
 .main-image {
   width: 100%;
-  vertical-align: top; /* 消除图片底部默认间隙 */
+  vertical-align: top;
+  border-radius: 16rpx;
 }
 
 .outfit-name-section {
   padding: 30rpx;
   background-color: #fff;
-  margin-bottom: 20rpx;
+  margin-top: 20rpx; /* 与图片的间距 */
+  border-radius: 16rpx;
   display: flex;
   align-items: flex-start;
 }
@@ -32,7 +37,7 @@
 
 .section {
   background-color: #fff;
-  margin: 0 20rpx 20rpx;
+  margin-top: 20rpx;
   padding: 30rpx;
   border-radius: 16rpx;
 }
@@ -45,7 +50,7 @@
 
 .clothes-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 每行4个 */
+  grid-template-columns: repeat(4, 1fr);
   gap: 20rpx;
 }
 
@@ -75,10 +80,13 @@
   bottom: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  height: 60px;
   display: flex;
   gap: 20rpx;
-  padding: 20rpx 30rpx;
-  padding-bottom: calc(20rpx + env(safe-area-inset-bottom)); /* 适配iPhoneX等全面屏 */
+  padding: 10px 30rpx;
+  box-sizing: border-box;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
   background-color: #fff;
   border-top: 1rpx solid #f0f0f0;
 }
@@ -87,6 +95,9 @@
   flex: 1;
   font-size: 30rpx;
   border-radius: 12rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .edit-btn {

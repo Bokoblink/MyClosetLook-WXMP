@@ -20,7 +20,7 @@ Page({
     currentCategory: "",
     selectableClothes: [],
     loadingClothes: false,
-    tempSelectedIds: new Set(),
+    tempSelectedIds: [],
     filterOptions: [],
     currentFilter: '全部',
 
@@ -63,26 +63,23 @@ Page({
   openSelector(e) {
     const { category } = e.currentTarget.dataset;
     const { allTags } = this.data;
-    
-    // 定义每个分类在弹窗中主要使用哪个字段来筛选
-    const filterFieldMap = {
-      '上衣': 'sleeveType',
-      '下裙': 'skirtType',
-      '配饰': 'accessoryType'
-    };
-
+    const filterFieldMap = { '上衣': 'sleeveType', '下裙': 'skirtType', '配饰': 'accessoryType' };
     const mainFilterField = filterFieldMap[category];
     const tagData = allTags.find(t => t.field === mainFilterField);
-    
     const filterOptions = tagData ? ['全部', ...tagData.options] : ['全部'];
+
+    // 从当前已选中的衣物ID初始化数组，以保留顺序
+    const currentSelectedIds = this.getCurrentSelectedIds(category);
 
     this.setData({ 
       currentCategory: category,
       isSelectorShow: true,
       currentFilter: '全部',
-      filterOptions: filterOptions
+      filterOptions: filterOptions,
+      tempSelectedIds: [...currentSelectedIds] // 初始化为数组
+    }, () => {
+      this.loadSelectableClothes();
     });
-    this.loadSelectableClothes();
   },
 
   onFilterTap(e) {
@@ -103,7 +100,7 @@ Page({
 
     this.setData({ loadingClothes: true });
 
-    const { currentCategory, currentFilter, selectorPage } = this.data;
+    const { currentCategory, currentFilter, selectorPage, tempSelectedIds } = this.data;
     const PAGE_SIZE = 20;
     
     let query = db.collection('clothes').where({ category: currentCategory });
@@ -121,15 +118,12 @@ Page({
     }
 
     query.skip(selectorPage * PAGE_SIZE).limit(PAGE_SIZE).get().then(res => {
-      const currentSelectedIds = this.getCurrentSelectedIds(currentCategory);
-      const newClothes = res.data.map(item => ({ ...item, selected: currentSelectedIds.has(item._id) }));
+      const newClothes = res.data.map(item => ({ ...item, selected: tempSelectedIds.includes(item._id) }));
       
       this.setData({ 
         selectableClothes: loadMore ? [...this.data.selectableClothes, ...newClothes] : newClothes,
         loadingClothes: false,
         selectorHasMore: newClothes.length === PAGE_SIZE,
-        // tempSelectedIds 每次都应从当前已选中的真实数据中同步，而不是依赖旧的temp
-        tempSelectedIds: new Set(currentSelectedIds) 
       });
     }).catch(err => {
       this.setData({ loadingClothes: false });
@@ -148,23 +142,53 @@ Page({
 
   getCurrentSelectedIds(category) {
     const keyMap = { '上衣': 'selectedTops', '下裙': 'selectedSkirts', '配饰': 'selectedAccessories' };
-    return new Set(this.data[keyMap[category]].map(item => item._id));
+    return this.data[keyMap[category]].map(item => item._id);
   },
 
   toggleClothSelection(e) {
     const { id } = e.currentTarget.dataset;
-    const { selectableClothes, tempSelectedIds } = this.data;
-    if (tempSelectedIds.has(id)) tempSelectedIds.delete(id); else tempSelectedIds.add(id);
-    const newSelectableClothes = selectableClothes.map(item => ({ ...item, selected: tempSelectedIds.has(item._id) }));
-    this.setData({ selectableClothes: newSelectableClothes, tempSelectedIds });
+    const { selectableClothes } = this.data;
+    let tempSelectedIds = [...this.data.tempSelectedIds]; // 复制数组
+    const index = tempSelectedIds.indexOf(id);
+
+    if (index > -1) {
+      tempSelectedIds.splice(index, 1); // 存在则移除
+    } else {
+      tempSelectedIds.push(id); // 不存在则添加
+    }
+
+    // 更新列表中的选中状态
+    const newSelectableClothes = selectableClothes.map(item => ({
+      ...item,
+      selected: tempSelectedIds.includes(item._id)
+    }));
+
+    this.setData({ 
+      selectableClothes: newSelectableClothes, 
+      tempSelectedIds: tempSelectedIds 
+    });
   },
 
   closeSelector() {
-    const { currentCategory, tempSelectedIds, selectableClothes } = this.data;
+    const { currentCategory, tempSelectedIds } = this.data;
     const keyMap = { '上衣': 'selectedTops', '下裙': 'selectedSkirts', '配饰': 'selectedAccessories' };
-    const allAvailableClothes = this.data[keyMap[currentCategory]].filter(item => !selectableClothes.some(s => s._id === item._id));
-    const newSelection = [...selectableClothes].filter(item => tempSelectedIds.has(item._id));
-    this.setData({ [keyMap[currentCategory]]: [...allAvailableClothes, ...newSelection], isSelectorShow: false });
+    const categoryKey = keyMap[currentCategory];
+
+    // 1. 获取当前分类下所有已选中的衣物对象
+    const allSelectedForCategory = this.data[categoryKey];
+    
+    // 2. 找出所有衣物对象，以便按ID查找
+    const allClothesMap = new Map();
+    this.data.selectableClothes.forEach(c => allClothesMap.set(c._id, c));
+    allSelectedForCategory.forEach(c => allClothesMap.set(c._id, c));
+
+    // 3. 根据tempSelectedIds的顺序，生成最终的对象数组
+    const finalItems = tempSelectedIds.map(id => allClothesMap.get(id)).filter(Boolean);
+
+    this.setData({ 
+      [categoryKey]: finalItems, 
+      isSelectorShow: false 
+    });
   },
 
   // --- 保存逻辑 ---
@@ -179,10 +203,14 @@ Page({
       if (this.data.outfitImage) {
         const uploadResult = await wx.cloud.uploadFile({ cloudPath: `outfits/${Date.now()}.png`, filePath: this.data.outfitImage });
         outfitImageUrl = uploadResult.fileID;
-      } else if (this.data.selectedTops.length > 0) { // 优先用上衣
-        outfitImageUrl = this.data.selectedTops[0].imageUrl;
-      } else if (this.data.selectedSkirts.length > 0) { // 其次用下裙
-        outfitImageUrl = this.data.selectedSkirts[0].imageUrl;
+      }
+
+      // 决定备用图
+      let fallbackImageUrl = "";
+      if (this.data.selectedSkirts.length > 0) {
+        fallbackImageUrl = this.data.selectedSkirts[0].imageUrl;
+      } else if (this.data.selectedTops.length > 0) {
+        fallbackImageUrl = this.data.selectedTops[0].imageUrl;
       }
 
       const clothesIds = [
@@ -191,7 +219,7 @@ Page({
         ...this.data.selectedAccessories.map(i => i._id)
       ];
 
-      await db.collection('outfits').add({ data: { name: this.data.name, outfitImageUrl: outfitImageUrl, clothes: clothesIds, season: this.data.season, createdAt: db.serverDate() } });
+      await db.collection('outfits').add({ data: { name: this.data.name, outfitImageUrl: outfitImageUrl, fallbackImageUrl: fallbackImageUrl, clothes: clothesIds, season: this.data.season, createdAt: db.serverDate() } });
 
       wx.hideLoading();
       wx.showToast({ title: '保存成功' });
