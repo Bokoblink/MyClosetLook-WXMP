@@ -128,14 +128,26 @@ Page({
     }
     wx.showLoading({ title: '正在保存...' });
 
-    let newImageUrl = this.data.originalImageUrl;
-
     try {
+      let newImageUrl = this.data.originalImageUrl;
+      let oldImageToDelete = null; // 用于标记待删除的旧图
+
+      // 检查用户是否更改了图片
       if (this.data.imageUrl !== this.data.originalImageUrl) {
-        const uploadResult = await wx.cloud.uploadFile({ cloudPath: `clothes/${Date.now()}.png`, filePath: this.data.imageUrl });
-        newImageUrl = uploadResult.fileID;
-        if (this.data.originalImageUrl) {
-          wx.cloud.deleteFile({ fileList: [this.data.originalImageUrl] });
+        // Case 1: 用户选择了新的本地图片进行上传
+        if (this.data.imageUrl && (this.data.imageUrl.startsWith('wxfile:') || this.data.imageUrl.startsWith('http://tmp/'))) {
+          const uploadResult = await wx.cloud.uploadFile({ cloudPath: `clothes/${Date.now()}.png`, filePath: this.data.imageUrl });
+          newImageUrl = uploadResult.fileID;
+          if (this.data.originalImageUrl && this.data.originalImageUrl.startsWith('cloud:')) {
+            oldImageToDelete = this.data.originalImageUrl; // 标记旧图，待数据库更新成功后再删除
+          }
+        } 
+        // Case 2: 用户清空了图片
+        else if (!this.data.imageUrl) {
+          newImageUrl = '';
+          if (this.data.originalImageUrl && this.data.originalImageUrl.startsWith('cloud:')) {
+            oldImageToDelete = this.data.originalImageUrl; // 标记旧图，待数据库更新成功后再删除
+          }
         }
       }
 
@@ -149,11 +161,20 @@ Page({
         ...this.data.attributes
       };
 
+      // 步骤1：先更新数据库
       await db.collection('clothes').doc(this.data._id).update({ data: dataToUpdate });
+
+      // 步骤2：数据库更新成功后，再删除旧的云文件
+      if (oldImageToDelete) {
+        wx.cloud.deleteFile({ fileList: [oldImageToDelete] }).catch(err => {
+          console.error("删除旧云文件失败: ", err); // 删除失败只记录日志，不影响用户体验
+        });
+      }
 
       wx.hideLoading();
       wx.showToast({ title: "更新成功" });
       setTimeout(() => { wx.navigateBack(); }, 1500);
+
     } catch (err) {
       wx.hideLoading();
       wx.showToast({ title: '更新失败', icon: 'none' });
