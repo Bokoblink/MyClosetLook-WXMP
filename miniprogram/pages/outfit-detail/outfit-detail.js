@@ -76,9 +76,10 @@ Page({
   async performDelete() {
     wx.showLoading({ title: '删除中...' });
     try {
-      // 如果穿搭有主图，且是上传的图片，则删除
-      if (this.data.outfit.outfitImageUrl && this.data.outfit.outfitImageUrl.startsWith('cloud://')) {
-        wx.cloud.deleteFile({ fileList: [this.data.outfit.outfitImageUrl] });
+      // 如果穿搭有主图，且是上传的图片（cloud://开头），并且路径确实是outfits/文件夹下的，才删除
+      const imageUrl = this.data.outfit.outfitImageUrl;
+      if (imageUrl && imageUrl.startsWith('cloud://') && imageUrl.includes('/outfits/')) {
+        wx.cloud.deleteFile({ fileList: [imageUrl] });
       }
       // 从数据库删除记录
       await db.collection('outfits').doc(this.data.id).remove();
