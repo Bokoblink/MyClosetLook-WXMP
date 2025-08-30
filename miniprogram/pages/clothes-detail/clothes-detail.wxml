@@ -64,7 +64,7 @@
     <view class="title">包含此衣服的穿搭</view>
     <scroll-view scroll-x class="outfits-scroll">
       <navigator class="outfit-item" wx:for="{{relatedOutfits}}" wx:key="_id" url="../outfit-detail/outfit-detail?id={{item._id}}">
-        <image class="outfit-image" src="{{item.outfitImageUrl}}" mode="aspectFill"></image>
+        <image class="outfit-image" src="{{item.outfitImageUrl || item.fallbackImageUrl || '/images/default-outfit.png'}}" mode="aspectFill"></image>
         <view class="outfit-name">{{item.name}}</view>
       </navigator>
     </scroll-view>
