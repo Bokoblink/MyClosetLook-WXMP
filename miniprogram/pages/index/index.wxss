@@ -25,7 +25,7 @@
   display: flex;
   flex-wrap: wrap;
   padding: 20rpx;
-  align-content: flex-start; /* 核心修复：让多行内容从顶部开始排列，不要拉伸 */
+  align-content: flex-start; /* 让多行内容从顶部开始排列，不要拉伸 */
 }
 
 .outfit-item {

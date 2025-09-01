@@ -36,8 +36,8 @@
   padding: 20rpx;
   background: #f8f8f8;
   width: 100%;
-  overflow-x: auto; /* ★ 加横向滚动，避免太多选项挤掉 */
-  box-sizing: border-box; /* ★ 核心修复：让padding包含在width内 */
+  overflow-x: auto; /* 加横向滚动，避免太多选项挤掉 */
+  box-sizing: border-box; /* 让padding包含在width内 */
 }
 
 .filter-item {
@@ -51,10 +51,10 @@
   border-radius: 30rpx;
   font-size: 26rpx;
   box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.05);
-  transition: all 0.2s; /* ★ 增加过渡 */
+  transition: all 0.2s; /* 增加过渡 */
 }
 
-.filter-item:active { /* ★ 点击时反馈 */
+.filter-item:active { /* 点击时反馈 */
   transform: scale(0.95);
   background: #f0f0f0;
 }

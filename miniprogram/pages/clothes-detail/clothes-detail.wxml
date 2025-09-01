@@ -30,11 +30,11 @@
         <text class="value">{{clotheDetail.collarType}}</text>
       </view>
       <view class="info-item" wx:if="{{clotheDetail.skirtType}}">
-        <text class="label">裙型</text>
+        <text class="label">类型</text>
         <text class="value">{{clotheDetail.skirtType}}</text>
       </view>
       <view class="info-item" wx:if="{{clotheDetail.accessoryType}}">
-        <text class="label">配饰类型</text>
+        <text class="label">类型</text>
         <text class="value">{{clotheDetail.accessoryType}}</text>
       </view>
     </view>
@@ -61,7 +61,7 @@
 
   <!-- 相关穿搭 -->
   <view class="section related-outfits-section" wx:if="{{relatedOutfits.length > 0}}">
-    <view class="title">包含此衣服的穿搭</view>
+    <view class="title">包含此衣物的穿搭</view>
     <scroll-view scroll-x class="outfits-scroll">
       <navigator class="outfit-item" wx:for="{{relatedOutfits}}" wx:key="_id" url="../outfit-detail/outfit-detail?id={{item._id}}">
         <image class="outfit-image" src="{{item.outfitImageUrl || item.fallbackImageUrl || '/images/default-outfit.png'}}" mode="aspectFill"></image>

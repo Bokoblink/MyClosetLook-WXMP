@@ -24,7 +24,7 @@
         <image wx:if="{{outfitImage}}" src="{{outfitImage}}" class="preview" mode="aspectFill"></image>
         <view wx:else class="upload-placeholder">+ 上传图片</view>
       </view>
-      <view class="form-tip">不上传将默认使用第一件上衣或下裙的图片</view>
+      <view class="form-tip">不上传将默认使用第一件下裙或上衣的图片</view>
     </view>
   </view>
 
@@ -75,7 +75,7 @@
 
   <!-- 保存按钮 -->
   <view class="action-bar">
-    <button class="save-btn" bindtap="saveOutfit">保存穿搭</button>
+    <button class="save-btn" bindtap="saveOutfit">保存</button>
   </view>
 </view>
 

@@ -5,8 +5,8 @@ Page({
     clotheDetail: null,
     relatedOutfits: [],
     id: '',
-    hasSizes: false, // ★ 新增一个标志位，判断有无尺寸信息
-    sortedSizes: [] // ★ 新增一个数组，用来存放排序后的尺寸
+    hasSizes: false, // 标志位，判断有无尺寸信息
+    sortedSizes: [] // 存放排序后的尺寸
   },
 
   onLoad(options) {

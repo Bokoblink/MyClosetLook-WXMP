@@ -110,12 +110,12 @@ Page({
 
   handleDeleteOption(e) {
     const { tagId, option } = e.currentTarget.dataset;
-    wx.showModal({ title: '确认删除', content: `确定要删除选项 "${option}" 吗？`, success: async res => { if (res.confirm) await this.callUpdateTag(tagId, 'PULL_OPTION', option, true); } });
+    wx.showModal({ title: '确认删除', content: `删除后将无法恢复，确定要删除选项 "${option}" 吗？`, success: async res => { if (res.confirm) await this.callUpdateTag(tagId, 'PULL_OPTION', option, true); } });
   },
 
   handleDeleteField(e) {
     const { tagId, fieldKey } = e.currentTarget.dataset;
-    wx.showModal({ title: '确认删除', content: `确定要删除字段 "${fieldKey}" 吗？`, success: async res => { if (res.confirm) await this.callUpdateTag(tagId, 'PULL_FIELD', fieldKey, true); } });
+    wx.showModal({ title: '确认删除', content: `删除后将无法恢复，确定要删除字段 "${fieldKey}" 吗？`, success: async res => { if (res.confirm) await this.callUpdateTag(tagId, 'PULL_FIELD', fieldKey, true); } });
   },
 
   // --- DB & Helpers ---
