@@ -1,0 +1,304 @@
+/* pages/add-outfit/add-outfit.wxss */
+.container {
+  padding: 20rpx;
+  padding-bottom: 160rpx;
+}
+
+.form-section, .category-section {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
+}
+
+.form-item {
+  margin-bottom: 30rpx;
+}
+
+.label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10rpx;
+  font-size: 30rpx;
+}
+
+.label.required::after {
+  content: '*';
+  color: #fa5151;
+  margin-left: 8rpx;
+}
+
+/* 统一表单元素基础样式 */
+textarea, .input, .picker-container {
+  border: 1px solid #ddd;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 输入框独有样式 */
+.input {
+  height: 88rpx;
+  padding: 0 15rpx;
+}
+
+/* 备注的多行文本框样式 */
+textarea {
+  height: 150rpx;
+  padding: 15rpx; /* textarea需要垂直padding */
+}
+
+/* --- 选择器带清除按钮的样式 --- */
+.picker-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8rpx;
+  height: 88rpx;
+  padding: 0 15rpx;
+}
+
+.picker-container picker {
+  flex: 1; /* 让picker组件自身撑满剩余空间 */
+}
+
+.picker-content {
+  flex: 1;
+  font-size: 28rpx;
+}
+
+.picker-content.placeholder-style {
+  color: #999;
+}
+
+.clear-btn {
+  font-size: 36rpx;
+  color: #bbb;
+  padding-left: 20rpx;
+}
+
+.picker.placeholder-style {
+  color: #999;
+}
+
+.upload-box {
+  width: 200rpx;
+  height: 200rpx;
+  border: 1px dashed #aaa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8rpx;
+}
+
+.upload-placeholder {
+  color: #888;
+}
+
+.preview {
+  width: 100%;
+  height: 100%;
+  border-radius: 8rpx;
+}
+
+.form-tip {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+  flex-grow: 1; /* 让标题占据多余空间，将按钮推到右边 */
+}
+
+.add-btn {
+  background-color: #07c160;
+  color: white;
+}
+
+.clothes-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  min-height: 100rpx; /* 即使为空也保持一定高度 */
+  padding: 20rpx;
+  border: 1px dashed #ddd;
+  border-radius: 8rpx;
+}
+
+.clothe-item {
+  position: relative;
+  width: 120rpx;
+  height: 120rpx;
+}
+
+.clothe-thumb {
+  width: 100%;
+  height: 100%;
+  border-radius: 8rpx;
+}
+
+.remove-icon {
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  width: 36rpx;
+  height: 36rpx;
+  background-color: rgba(0,0,0,0.6);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24rpx;
+  line-height: 36rpx;
+}
+
+.empty-tip {
+  color: #999;
+  font-size: 26rpx;
+  width: 100%;
+  text-align: center;
+  line-height: 100rpx;
+}
+
+.save-btn {
+  background: #07C160;
+  color: white;
+  flex: 1;
+}
+
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  background-color: #fff;
+  border-top: 1rpx solid #f0f0f0;
+  z-index: 100;
+}
+
+/* --- 选择弹窗样式 --- */
+.selector-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f8f8f8;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.selector-title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.close-btn {
+  color: #07c160;
+  font-size: 30rpx;
+}
+
+.filter-section {
+  padding: 20rpx;
+  background-color: #fff;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.filter-scroll {
+  white-space: nowrap;
+}
+
+.filter-item {
+  display: inline-block;
+  padding: 10rpx 30rpx;
+  margin-right: 20rpx;
+  border-radius: 30rpx;
+  background-color: #f0f0f0;
+  font-size: 26rpx;
+}
+
+.filter-item.active {
+  background-color: #07c160;
+  color: white;
+}
+
+.selector-list-wrapper {
+  flex: 1;
+  overflow: hidden;
+}
+
+.selector-list {
+  height: 100%;
+}
+
+.selector-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  background-color: #fff;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.selector-item.selected {
+  background-color: #f0fff8;
+}
+
+.selector-item text {
+  flex: 1;
+}
+
+.checkbox {
+  width: 40rpx;
+  height: 40rpx;
+  border: 1rpx solid #ccc;
+  border-radius: 50%;
+  position: relative;
+}
+
+.checkbox.checked {
+  background-color: #07c160;
+  border-color: #07c160;
+}
+
+.checkbox.checked::after {
+  content: '✓';
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 28rpx;
+}
+
+.selector-image {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 8rpx;
+  margin-right: 20rpx;
+}

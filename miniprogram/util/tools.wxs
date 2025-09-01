@@ -1,0 +1,9 @@
+var tools = {
+  stringify: function(obj) {
+    return JSON.stringify(obj);
+  }
+}
+
+module.exports = {
+  stringify: tools.stringify
+}

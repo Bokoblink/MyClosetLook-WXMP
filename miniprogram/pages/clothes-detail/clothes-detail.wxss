@@ -1,0 +1,113 @@
+/* clothes-detail.wxss */
+.container {
+  padding-bottom: 180rpx; /* 为底部操作栏留出空间 */
+}
+
+.main-image {
+  width: 100%;
+  height: 750rpx;
+  background-color: #f0f0f0;
+}
+
+.section {
+  background-color: #fff;
+  margin: 20rpx;
+  padding: 30rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
+}
+
+.info-section .name {
+  font-size: 40rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30rpx;
+}
+
+.info-item .label {
+  display: block;
+  font-size: 24rpx;
+  color: #888;
+  margin-bottom: 10rpx;
+}
+
+.info-item .value {
+  font-size: 30rpx;
+  color: #333;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.remark-text {
+  font-size: 28rpx;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* 相关穿搭 */
+.outfits-scroll {
+  white-space: nowrap;
+}
+
+.outfit-item {
+  display: inline-block;
+  width: 220rpx;
+  margin-right: 20rpx;
+  text-align: center;
+}
+
+.outfit-image {
+  width: 100%;
+  height: 220rpx;
+  border-radius: 12rpx;
+  background-color: #f0f0f0;
+}
+
+.outfit-name {
+  font-size: 24rpx;
+  margin-top: 10rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 底部操作栏 */
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 20rpx;
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom)); /* 适配iPhoneX等全面屏 */
+  background-color: #fff;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.action-btn {
+  flex: 1;
+  font-size: 30rpx;
+  border-radius: 12rpx;
+}
+
+.edit-btn {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.delete-btn {
+  background-color: #fa5151;
+  color: #fff;
+}
