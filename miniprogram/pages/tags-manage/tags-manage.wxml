@@ -1,0 +1,71 @@
+<!--pages/tags-manage/tags-manage.wxml-->
+<view class="container">
+  <!-- 遍历分组 -->
+  <block wx:for="{{groupedTags}}" wx:for-item="group" wx:key="groupName">
+    <view class="group-title">{{group.groupName}}</view>
+
+    <!-- 遍历分组下的标签卡片 -->
+    <block wx:for="{{group.tags}}" wx:for-item="tag" wx:key="id">
+      <view class="tag-card">
+        <view class="card-header">
+          <text class="title">{{tag.name}}</text>
+          <button class="add-btn" size="mini" bindtap="showAddModal" data-tag-id="{{tag.id}}" data-type="{{tag.type}}">+ 添加</button>
+        </view>
+
+        <!-- 属性标签列表 -->
+        <view class="tag-list" wx:if="{{tag.type === 'attribute'}}">
+          <block wx:for="{{tag.options}}" wx:for-item="option" wx:key="*this">
+            <view class="tag-item">
+              <text>{{option}}</text>
+              <view class="delete-btn" bindtap="handleDeleteOption" data-tag-id="{{tag.id}}" data-option="{{option}}">×</view>
+            </view>
+          </block>
+        </view>
+
+        <!-- 尺寸字段列表 -->
+        <view class="tag-list" wx:if="{{tag.type === 'size'}}">
+          <block wx:for="{{tag.fields}}" wx:for-item="field" wx:key="key">
+            <view class="field-item">
+              <view class="field-info">
+                <text class="field-key">{{field.key}}</text>
+                <view class="actions">
+                  <view class="edit-btn" bindtap="showEditModal" data-tag-id="{{tag.id}}" data-field-key="{{field.key}}">✎</view>
+                  <view class="delete-btn" bindtap="handleDeleteField" data-tag-id="{{tag.id}}" data-field-key="{{field.key}}">×</view>
+                </view>
+              </view>
+              <text class="field-placeholder">提示: {{field.placeholder}}</text>
+            </view>
+          </block>
+        </view>
+
+      </view>
+    </block>
+  </block>
+  <button class="import-data-btn" bindtap="goToImportPage">数据导入</button>
+</view>
+
+<!-- 通用编辑/新增弹窗 -->
+<view class="modal-mask" wx:if="{{showModal}}">
+  <view class="modal-dialog">
+    <view class="modal-title">{{modalTitle}}</view>
+    
+    <block wx:if="{{modalType === 'attribute'}}">
+      <input class="modal-input" placeholder="请输入新选项名称" value="{{inputValue}}" bindinput="onModalInput" />
+    </block>
+
+    <block wx:if="{{modalType === 'size' && !isEditMode}}">
+      <input class="modal-input" placeholder="请输入字段名称 (如: 肩宽)" value="{{newField.key}}" bindinput="onModalInput" data-key="key"/>
+      <input class="modal-input" placeholder="请输入提示词 (如: 70cm)" value="{{newField.placeholder}}" bindinput="onModalInput" data-key="placeholder"/>
+    </block>
+
+    <block wx:if="{{modalType === 'size' && isEditMode}}">
+      <view class="modal-subtitle">请输入提示词</view>
+      <input class="modal-input" placeholder="请输入提示词 (如: 70cm)" value="{{newField.placeholder}}" bindinput="onModalInput" data-key="placeholder"/>
+    </block>
+
+    <view class="modal-buttons">
+      <button bindtap="hideModal">取消</button>
+      <button type="primary" bindtap="handleModalConfirm">确定</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,37 @@
+<!-- pages/index/index.wxml -->
+<view class="container">
+  <!-- 季节筛选栏 -->
+  <view class="season-filter">
+    <block wx:for="{{seasons}}" wx:key="*this">
+      <button 
+        data-season="{{item}}"
+        bindtap="changeSeason"
+        class="{{activeSeason === item ? 'active' : ''}}"
+      >{{item}}</button>
+    </block>
+  </view>
+
+  <!-- 穿搭列表 -->
+  <view class="outfit-list">
+    <block wx:for="{{outfits}}" wx:key="id">
+      <view class="outfit-item" bindtap="viewDetail" data-id="{{item.id}}">
+        <image src="{{item.outfitImageUrl || item.fallbackImageUrl || '/images/default-outfit.png'}}" mode="aspectFill"></image>
+        <view class="outfit-name">{{item.name}}</view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="bottom-tips">
+    <view class="loading-tip" wx:if="{{isLoading}}">正在加载...</view>
+    <view class="nomore-tip" wx:if="{{!hasMore && outfits.length > 0}}">--- 我是有底线的 ---</view>
+  </view>
+
+  <!-- 空状态提示 -->
+  <view wx:if="{{outfits.length === 0 && !isLoading}}" class="empty-tip">
+    <text>暂无穿搭，点击右下角按钮添加</text>
+  </view>
+
+  <!-- 悬浮按钮 -->
+  <floating-button bindtap="goToAddOutfit"></floating-button>
+</view>

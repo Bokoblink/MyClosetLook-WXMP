@@ -1,0 +1,78 @@
+<view class="container" wx:if="{{clotheDetail}}">
+  <!-- 主图 -->
+  <image class="main-image" src="{{clotheDetail.imageUrl}}" mode="widthFix"></image>
+
+  <!-- 主要信息 -->
+  <view class="section info-section">
+    <view class="name">{{clotheDetail.name}}</view>
+    <view class="info-grid">
+      <view class="info-item">
+        <text class="label">分类</text>
+        <text class="value">{{clotheDetail.category}}</text>
+      </view>
+      <view class="info-item" wx:if="{{clotheDetail.season}}">
+        <text class="label">季节</text>
+        <text class="value">{{clotheDetail.season}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 详细属性 -->
+  <view class="section attributes-section">
+    <view class="title">详细属性</view>
+    <view class="info-grid">
+      <view class="info-item" wx:if="{{clotheDetail.sleeveType}}">
+        <text class="label">袖型</text>
+        <text class="value">{{clotheDetail.sleeveType}}</text>
+      </view>
+      <view class="info-item" wx:if="{{clotheDetail.collarType}}">
+        <text class="label">领型</text>
+        <text class="value">{{clotheDetail.collarType}}</text>
+      </view>
+      <view class="info-item" wx:if="{{clotheDetail.skirtType}}">
+        <text class="label">类型</text>
+        <text class="value">{{clotheDetail.skirtType}}</text>
+      </view>
+      <view class="info-item" wx:if="{{clotheDetail.accessoryType}}">
+        <text class="label">类型</text>
+        <text class="value">{{clotheDetail.accessoryType}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 尺寸信息 -->
+  <view class="section size-section" wx:if="{{hasSizes}}">
+    <view class="title">尺寸信息</view>
+    <view class="info-grid">
+      <block wx:for="{{sortedSizes}}" wx:key="key">
+        <view class="info-item">
+          <text class="label">{{item.key}}</text>
+          <text class="value">{{item.value}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 备注 -->
+  <view class="section remark-section" wx:if="{{clotheDetail.remark}}">
+    <view class="title">备注</view>
+    <text class="remark-text">{{clotheDetail.remark}}</text>
+  </view>
+
+  <!-- 相关穿搭 -->
+  <view class="section related-outfits-section" wx:if="{{relatedOutfits.length > 0}}">
+    <view class="title">包含此衣物的穿搭</view>
+    <scroll-view scroll-x class="outfits-scroll">
+      <navigator class="outfit-item" wx:for="{{relatedOutfits}}" wx:key="id" url="../outfit-detail/outfit-detail?id={{item.id}}">
+        <image class="outfit-image" src="{{item.outfitImageUrl || item.fallbackImageUrl || '/images/default-outfit.png'}}" mode="aspectFill"></image>
+        <view class="outfit-name">{{item.name}}</view>
+      </navigator>
+    </scroll-view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-bar">
+    <button class="action-btn edit-btn" bindtap="editClothe">编辑</button>
+    <button class="action-btn delete-btn" bindtap="deleteClothe">删除</button>
+  </view>
+</view>

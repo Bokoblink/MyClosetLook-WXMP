@@ -1,0 +1,74 @@
+/* pages/index/index.wxss */
+.season-filter {
+  display: flex;
+  padding: 20rpx;
+  background: #f8f8f8;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.season-filter button {
+  flex: 1;
+  margin: 0 10rpx;
+  font-size: 28rpx;
+  background: white;
+  border-radius: 8rpx;
+}
+
+.season-filter button.active {
+  background: #07C160;
+  color: white;
+}
+
+.outfit-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20rpx;
+  align-content: flex-start; /* 让多行内容从顶部开始排列，不要拉伸 */
+}
+
+.outfit-item {
+  width: 48%;
+  margin: 1%;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
+  border-radius: 16rpx;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.outfit-item image {
+  width: 100%;
+  height: 350rpx; /* 给图片一个固定高度 */
+}
+
+.outfit-name {
+  padding: 15rpx;
+  font-size: 28rpx;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.empty-tip {
+  width: 100%;
+  text-align: center;
+  padding: 100rpx 0;
+  color: #999;
+}
+
+.empty-tip image {
+  width: 200rpx;
+  margin-bottom: 30rpx;
+}
+
+/* 底部提示样式 */
+.bottom-tips {
+  padding: 20rpx;
+  text-align: center;
+  color: #999;
+  font-size: 24rpx;
+}

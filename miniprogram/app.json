@@ -1,0 +1,49 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/wardrobe/wardrobe",
+    "pages/add-clothes/add-clothes",
+    "pages/edit-clothes/edit-clothes",
+    "pages/clothes-detail/clothes-detail",
+    "pages/add-outfit/add-outfit",
+    "pages/outfit-detail/outfit-detail",
+    "pages/edit-tags/edit-tags",
+    "pages/edit-outfit/edit-outfit",
+    "pages/tags-manage/tags-manage",
+    "pages/data-import/data-import"
+  ],
+  "window": {
+    "navigationBarTitleText": "我的穿搭",
+    "backgroundColor": "#ffffff"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#07C160",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "穿搭",
+        "iconPath": "images/tab-outfit.png",
+        "selectedIconPath": "images/tab-outfit-active.png"
+      },
+      {
+        "pagePath": "pages/wardrobe/wardrobe",
+        "text": "衣橱",
+        "iconPath": "images/tab-wardrobe.png",
+        "selectedIconPath": "images/tab-wardrobe-active.png"
+      },
+      {
+        "pagePath": "pages/tags-manage/tags-manage",
+        "text": "分类",
+        "iconPath": "images/tab-tags.png",
+        "selectedIconPath": "images/tab-tags-active.png"
+      }
+    ]
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "useExtendedLib": {
+    "weui": true
+  }
+}

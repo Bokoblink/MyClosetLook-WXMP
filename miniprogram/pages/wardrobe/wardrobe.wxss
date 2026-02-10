@@ -1,0 +1,200 @@
+/* 分类导航样式 */
+.category-tabs {
+  display: flex;
+  height: 80rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.category-tabs .tab {
+  flex: 1;
+  text-align: center;
+  line-height: 80rpx;
+  color: #666;
+  position: relative;
+}
+
+.category-tabs .active {
+  color: #07C160;
+  font-weight: bold;
+}
+
+.category-tabs .active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80rpx;
+  height: 4rpx;
+  background: #07C160;
+}
+
+/* 筛选条件栏 */
+.filter-bar {
+  white-space: nowrap;
+  padding: 20rpx;
+  background: #f8f8f8;
+  width: 100%;
+  overflow-x: auto; /* 加横向滚动，避免太多选项挤掉 */
+  box-sizing: border-box; /* 让padding包含在width内 */
+}
+
+.filter-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;  /* ★ 内容居中 */
+  padding: 0 25rpx;
+  margin-right: 20rpx;
+  height: 60rpx;
+  background: #fff;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.05);
+  transition: all 0.2s; /* 增加过渡 */
+}
+
+.filter-item:active { /* 点击时反馈 */
+  transform: scale(0.95);
+  background: #f0f0f0;
+}
+
+.filter-item.active {
+  background: #07C160;
+  color: white;
+}
+
+.icon-arrow {
+  width: 24rpx;
+  height: 24rpx;
+  margin-left: 8rpx;
+}
+
+/* 筛选弹窗 */
+.filter-popup-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.filter-popup-content {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  animation: slideUp 0.3s ease;
+}
+
+.popup-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.popup-options-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-bottom: 20px;
+}
+
+.popup-option {
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  text-align: center;
+  flex-basis: calc(33.333% - 14rpx);
+  box-sizing: border-box;
+}
+
+.popup-option.selected {
+  background-color: #07c160 !important; /* 强制应用最高优先级 */
+  color: #fff;
+  border-color: #07c160;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.popup-buttons button {
+  flex: 1;
+  margin: 0 10rpx;
+}
+
+.popup-buttons .confirm-btn {
+  background-color: #07c160;
+  color: white;
+}
+
+.popup-buttons .reset-btn {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+/* ★ 弹窗动画 */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* 底部提示样式 */
+.bottom-tips {
+  padding: 20rpx;
+  text-align: center;
+  color: #999;
+  font-size: 24rpx;
+}
+
+/* 衣物列表 */
+.clothes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 两列布局 */
+  gap: 20rpx;
+  padding: 20rpx;
+}
+
+.clothe-item {
+  border-radius: 10rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+  background-color: #fff;
+}
+
+.clothe-image {
+  width: 100%;
+  height: 350rpx;
+  background-color: #f0f0f0;
+}
+
+.clothe-name {
+  padding: 15rpx;
+  font-size: 28rpx;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  color: #888;
+  padding: 100rpx 40rpx;
+}

@@ -1,0 +1,168 @@
+/* pages/tags-manage/tags-manage.wxss */
+
+.container {
+  padding: 20rpx;
+  background-color: #f7f7f7;
+  min-height: 100vh;
+}
+
+.group-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+  padding-left: 10rpx;
+  border-left: 8rpx solid #07C160;
+}
+
+.tag-card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 30rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  margin-bottom: 20rpx;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+  flex-grow: 1;
+}
+
+.add-btn {
+  background-color: #07c160;
+  color: white;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.tag-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 让内容和按钮分开 */
+  background-color: #f0f0f0;
+  padding: 10rpx 15rpx;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  /* 为排序按钮留出空间 */
+  min-width: 150rpx; 
+}
+
+.field-item {
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  background-color: #f7f7f7;
+  padding: 20rpx;
+}
+
+.field-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.field-key {
+}
+
+.field-placeholder {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.actions {
+  display: flex;
+  gap: 10rpx; /* 增加箭头间距 */
+  margin-left: 20rpx; /* 与文字的间距 */
+}
+
+.edit-btn,
+.delete-btn {
+  font-size: 36rpx;
+  color: #bbb;
+  padding: 0 10rpx;
+}
+
+.sort-arrow {
+  font-size: 36rpx;
+  color: #666;
+  padding: 0 5rpx;
+}
+
+/* 弹窗样式 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-dialog {
+  background-color: #fff;
+  width: 80%;
+  border-radius: 16rpx;
+  padding: 40rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.modal-subtitle {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.modal-input {
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  padding: 15rpx;
+  margin-bottom: 20rpx;
+  font-size: 30rpx;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-top: 20rpx;
+}
+
+.modal-buttons button {
+  flex: 1;
+}
+
+.import-data-btn {
+  width: calc(100% - 40rpx); /* 减去padding */
+  margin: 40rpx auto 20rpx auto;
+  background-color: #007aff;
+  color: #fff;
+  font-size: 32rpx;
+  border-radius: 10rpx;
+}

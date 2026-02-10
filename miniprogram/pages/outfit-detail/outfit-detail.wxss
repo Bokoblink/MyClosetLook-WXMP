@@ -1,0 +1,105 @@
+/* pages/outfit-detail/outfit-detail.wxss */
+.container {
+  /* 关键：计算出滚动区域的精确高度，为底部按钮栏留出空间 */
+  height: calc(100vh - 60px - env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  padding: 20rpx;
+}
+
+.main-image {
+  width: 100%;
+  vertical-align: top;
+  border-radius: 16rpx;
+}
+
+.outfit-name-section {
+  padding: 30rpx;
+  background-color: #fff;
+  margin-top: 20rpx; /* 与图片的间距 */
+  border-radius: 16rpx;
+  display: flex;
+  align-items: flex-start;
+}
+
+.outfit-name-section .name {
+  font-size: 40rpx;
+  font-weight: bold;
+  flex: 1;
+}
+
+.season-tag {
+  background-color: #f0f0f0;
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.section {
+  background-color: #fff;
+  margin-top: 20rpx;
+  padding: 30rpx;
+  border-radius: 16rpx;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+}
+
+.clothes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20rpx;
+}
+
+.clothe-item {
+  text-align: center;
+}
+
+.clothe-thumb {
+  width: 100%;
+  height: 150rpx;
+  border-radius: 8rpx;
+  background-color: #f0f0f0;
+}
+
+.clothe-name {
+  font-size: 24rpx;
+  margin-top: 10rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #666;
+}
+
+/* 底部操作栏 */
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 20rpx;
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom)); /* 适配iPhoneX等全面屏 */
+  background-color: #fff;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.action-btn {
+  flex: 1;
+  font-size: 30rpx;
+  border-radius: 12rpx;
+}
+
+.edit-btn {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.delete-btn {
+  background-color: #fa5151;
+  color: #fff;
+}

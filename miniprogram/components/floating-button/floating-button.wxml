@@ -1,0 +1,4 @@
+<!--components/floating-button/floating-button.wxml-->
+<view class="floating-btn" bindtap="onTap">
+  <image class="floating-btn__image" src="/images/icon-plus.png"></image>
+</view>

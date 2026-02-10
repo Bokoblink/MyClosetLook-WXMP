@@ -1,0 +1,76 @@
+<!--pages/edit-clothes/edit-clothes.wxml-->
+<view class="container">
+  <!-- 图片上传 -->
+  <view class="form-item">
+    <text class="label required">图片</text>
+    <view class="upload-box" bindtap="chooseImage">
+      <image wx:if="{{imageUrl}}" src="{{imageUrl}}" mode="aspectFit" class="preview"></image>
+      <view wx:else class="upload-placeholder">+ 上传图片</view>
+    </view>
+  </view>
+
+  <!-- 衣物名称 -->
+  <view class="form-item">
+    <text class="label required">衣物名称</text>
+    <input class="input" placeholder="请输入名称" value="{{name}}" data-key="name" bindinput="onInput"/>
+  </view>
+
+  <!-- 分类 -->
+  <view class="form-item">
+    <text class="label required">分类</text>
+    <view class="picker-container">
+      <picker mode="selector" range="{{categories}}" value="{{categories.indexOf(category)}}" bindchange="onCategoryChange">
+        <view class="picker-content {{category ? '' : 'placeholder-style'}}">{{category || '请选择分类'}}</view>
+      </picker>
+      <view wx:if="{{category}}" class="clear-btn" bindtap="clearPicker" data-key="category">×</view>
+    </view>
+  </view>
+
+  <!-- 季节 -->
+  <view class="form-item">
+    <text class="label">季节</text>
+    <view class="picker-container">
+      <picker mode="selector" range="{{seasons}}" value="{{seasons.indexOf(season)}}" bindchange="onSeasonChange">
+        <view class="picker-content {{season ? '' : 'placeholder-style'}}">{{season || '请选择季节'}}</view>
+      </picker>
+      <view wx:if="{{season}}" class="clear-btn" bindtap="clearPicker" data-key="season">×</view>
+    </view>
+  </view>
+
+  <!-- 动态属性选择器 -->
+  <block wx:for="{{currentAttributePickers}}" wx:for-item="picker" wx:key="field">
+    <view class="form-item">
+      <text class="label">{{picker.name}}</text>
+      <view class="picker-container">
+        <picker mode="selector" range="{{picker.options}}" value="{{picker.options.indexOf(attributes[picker.field])}}" bindchange="onAttributeChange" data-field="{{picker.field}}" data-options="{{picker.options}}">
+          <view class="picker-content {{attributes[picker.field] ? '' : 'placeholder-style'}}">{{attributes[picker.field] || '请选择' + picker.name}}</view>
+        </picker>
+        <view wx:if="{{attributes[picker.field]}}" class="clear-btn" bindtap="clearPicker" data-field="{{picker.field}}">×</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 动态尺寸输入框 -->
+  <block wx:if="{{currentSizeFields.length > 0}}">
+    <view class="size-section">
+      <text class="sub-label">尺寸</text>
+      <block wx:for="{{currentSizeFields}}" wx:for-item="field" wx:key="key">
+        <view class="form-item">
+          <text class="label">{{field.key}}</text>
+          <input class="input" placeholder="{{field.placeholder}}" value="{{sizes[field.key]}}" bindinput="onSizeInput" data-key="{{field.key}}" />
+        </view>
+      </block>
+    </view>
+  </block>
+
+  <!-- 备注 -->
+  <view class="form-item">
+    <text class="label">备注</text>
+    <textarea placeholder="可选" value="{{remark}}" data-key="remark" bindinput="onInput"></textarea>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="action-bar">
+    <button class="save-btn" bindtap="updateClothe">保存更新</button>
+  </view>
+</view>

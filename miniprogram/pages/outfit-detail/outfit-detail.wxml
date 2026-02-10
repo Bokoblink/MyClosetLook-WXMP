@@ -1,0 +1,47 @@
+<scroll-view scroll-y class="container" wx:if="{{outfit}}">
+  <!-- 穿搭主图 -->
+  <image wx:if="{{outfit.outfitImageUrl}}" class="main-image" src="{{outfit.outfitImageUrl}}" mode="widthFix"></image>
+
+  <!-- 穿搭名称 -->
+  <view class="outfit-name-section">
+    <view class="name">{{outfit.name}}</view>
+    <view wx:if="{{outfit.season}}" class="season-tag">{{outfit.season}}</view>
+  </view>
+
+  <!-- 包含单品 -->
+  <view class="section" wx:if="{{tops.length > 0}}">
+    <view class="title">上衣</view>
+    <view class="clothes-grid">
+      <navigator class="clothe-item" wx:for="{{tops}}" wx:key="id" url="../clothes-detail/clothes-detail?id={{item.id}}">
+        <image class="clothe-thumb" src="{{item.imageUrl}}" mode="aspectFill"></image>
+        <view class="clothe-name">{{item.name}}</view>
+      </navigator>
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{skirts.length > 0}}">
+    <view class="title">下裙</view>
+    <view class="clothes-grid">
+      <navigator class="clothe-item" wx:for="{{skirts}}" wx:key="id" url="../clothes-detail/clothes-detail?id={{item.id}}">
+        <image class="clothe-thumb" src="{{item.imageUrl}}" mode="aspectFill"></image>
+        <view class="clothe-name">{{item.name}}</view>
+      </navigator>
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{accessories.length > 0}}">
+    <view class="title">配饰</view>
+    <view class="clothes-grid">
+      <navigator class="clothe-item" wx:for="{{accessories}}" wx:key="id" url="../clothes-detail/clothes-detail?id={{item.id}}">
+        <image class="clothe-thumb" src="{{item.imageUrl}}" mode="aspectFill"></image>
+        <view class="clothe-name">{{item.name}}</view>
+      </navigator>
+    </view>
+  </view>
+</scroll-view>
+
+<!-- 操作按钮 -->
+<view class="action-bar">
+  <button class="action-btn edit-btn" bindtap="editOutfit">编辑</button>
+  <button class="action-btn delete-btn" bindtap="deleteOutfit">删除</button>
+</view>

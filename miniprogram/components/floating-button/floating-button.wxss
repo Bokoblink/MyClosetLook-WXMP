@@ -1,0 +1,19 @@
+/* components/floating-button/floating-button.wxss */
+.floating-btn {
+  position: fixed;
+  right: 30rpx;
+  bottom: 100rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  box-shadow: 0 4rpx 8rpx rgba(0,0,0,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.floating-btn__image {
+  width: 100%; /* 充满整个按钮 */
+  height: 100%;
+}

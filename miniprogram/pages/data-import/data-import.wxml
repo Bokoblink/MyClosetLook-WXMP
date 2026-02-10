@@ -1,0 +1,28 @@
+<view class="container">
+  <text class="title">从云端导入数据</text>
+  <text class="subtitle">请将从微信云开发导出的 JSON 数据粘贴到下方。请确保数据的格式正确。</text>
+
+  <view class="section">
+    <text class="section-title">导入衣物数据 (clothes)</text>
+    <textarea class="json-input" placeholder="粘贴您的衣物 JSON 数据" bindinput="onClothesJsonInput" value="{{clothesJsonInput}}" maxlength="-1"></textarea>
+    <button class="import-button" bindtap="importClothes" type="primary" disabled="{{!clothesJsonInput}}">导入衣物</button>
+  </view>
+
+  <view class="section">
+    <text class="section-title">导入穿搭数据 (outfits)</text>
+    <textarea class="json-input" placeholder="粘贴您的穿搭 JSON 数据" bindinput="onOutfitsJsonInput" value="{{outfitsJsonInput}}" maxlength="-1"></textarea>
+    <button class="import-button" bindtap="importOutfits" type="primary" disabled="{{!outfitsJsonInput}}">导入穿搭</button>
+  </view>
+
+  <view class="section">
+    <text class="section-title">导入标签数据 (tags)</text>
+    <textarea class="json-input" placeholder="粘贴您的标签 JSON 数据" bindinput="onTagsJsonInput" value="{{tagsJsonInput}}" maxlength="-1"></textarea>
+    <button class="import-button" bindtap="importTags" type="primary" disabled="{{!tagsJsonInput}}">导入标签</button>
+  </view>
+
+  <button class="clear-button" bindtap="clearAllInputs" type="warn">清空所有输入</button>
+
+  <button class="test-button" bindtap="testDownloadSpecificImage" type="default">测试特定图片下载</button>
+
+  <text class="status-message {{statusIsError ? 'error' : ''}}">{{statusMessage}}</text>
+</view>

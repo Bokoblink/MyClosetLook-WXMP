@@ -1,0 +1,73 @@
+<!-- pages/wardrobe/wardrobe.wxml -->
+<!-- 顶部分类导航 -->
+<view class="category-tabs">
+  <block wx:for="{{['上衣', '下裙', '配饰']}}" wx:key="*this">
+    <view 
+      class="tab {{activeCategory === item ? 'active' : ''}}"
+      data-category="{{item}}"
+      bindtap="changeCategory"
+    >
+      {{item}}
+    </view>
+  </block>
+</view>
+
+<!-- 筛选条件栏 (动态生成) -->
+<scroll-view scroll-x class="filter-bar">
+  <block wx:for="{{availableFilters}}" wx:for-item="filterKey" wx:key="*this">
+    <view 
+      class="filter-item {{selectedFilters[filterKey] && selectedFilters[filterKey].length ? 'active' : ''}}"
+      data-type="{{filterKey}}"
+      bindtap="showFilter"
+    >
+      <text>{{filterNames[filterKey]}}</text>
+      <text wx:if="{{selectedFilters[filterKey] && selectedFilters[filterKey].length}}">({{selectedFilters[filterKey].length}})</text>
+      <image class="icon-arrow" src="../../images/icon-arrow-down.png" />
+    </view>
+  </block>
+</scroll-view>
+
+<!-- 衣物列表 -->
+<view class="clothes-grid" wx:if="{{clothesList.length > 0}}">
+  <navigator class="clothe-item" url="../clothes-detail/clothes-detail?id={{item.id}}" wx:for="{{clothesList}}" wx:key="id">
+    <image class="clothe-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+    <view class="clothe-name">{{item.name}}</view>
+  </navigator>
+</view>
+
+<!-- 底部提示 -->
+<view class="bottom-tips">
+  <view class="loading-tip" wx:if="{{isLoading}}">正在加载...</view>
+  <view class="nomore-tip" wx:if="{{!hasMore && clothesList.length > 0}}">--- 我是有底线的 ---</view>
+</view>
+
+<!-- 空状态 -->
+<view class="empty-state" wx:if="{{clothesList.length === 0 && !isLoading}}">
+  <text>这个分类下还没有衣物哦，快去添加一件吧！</text>
+</view>
+
+<!-- 筛选弹窗 -->
+<view wx:if="{{showFilterModal}}" class="filter-popup">
+  <view class="filter-popup-mask" bindtap="closeFilter"></view>
+  <view class="filter-popup-content">
+    <view class="popup-title">选择{{currentFilterName}}</view>
+    <view class="popup-options-container">
+      <block wx:for="{{filterOptions[currentFilterType]}}" wx:key="*this">
+        <view 
+          class="popup-option {{selectedFilters[currentFilterType] && selectedFilters[currentFilterType].includes(item) ? 'selected' : ''}}"
+          data-value="{{item}}"
+          bindtap="toggleFilterOption"
+        >
+          {{item}}
+        </view>
+      </block>
+    </view>
+    <view class="popup-buttons">
+      <button class="reset-btn" bindtap="resetFilter">重置</button>
+      <button class="confirm-btn" bindtap="confirmFilter">确定</button>
+    </view>
+  </view>
+</view>
+
+<!-- 添加衣物悬浮按钮 -->
+<floating-button bind:tap="goToAddClothes"></floating-button>
